@@ -12,11 +12,11 @@ Future<void> main() async{
   try {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
-            apiKey: "AIzaSyDm8tLexf9_4qrFZEPgRO78w3dQgSud9s0",
-            appId: "com.example.car_parking",
-            messagingSenderId: "41441340795",
-            projectId: "car-parking-8cc27",
-            storageBucket: "car-parking-8cc27.appspot.com"
+            apiKey: "AIzaSyDQ99Osjr_CeuAAuGnxb9GXbGqY7SuLG7I",
+            appId: "com.example.online_admission",
+            messagingSenderId: "1076091619521",
+            projectId: "admissionapp-9c884",
+            storageBucket: "admissionapp-9c884.appspot.com"
         )
     );
   }
