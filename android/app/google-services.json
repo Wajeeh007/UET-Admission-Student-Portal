@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1076091619521",
+    "project_id": "admissionapp-9c884",
+    "storage_bucket": "admissionapp-9c884.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076091619521:android:e7d710a7abe40f194b2c40",
+        "android_client_info": {
+          "package_name": "com.example.online_admission"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076091619521-t1h8mecqj08rn1a0ej3ijbptd4s7v60m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ99Osjr_CeuAAuGnxb9GXbGqY7SuLG7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076091619521-t1h8mecqj08rn1a0ej3ijbptd4s7v60m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
