@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_admission/screens/homepage/base_layout.dart';
 import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,16 +38,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 18,
                           ),
                           Center(child: Text('Welcome Back, please login to access your UET merit list and admission application', style: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w600, fontSize: 14.5),)),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                           Form(
                         key: Model.formKey,
                         child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: Align(alignment: Alignment.centerLeft,child: const Text('Email', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 15.0),
+                              child: Align(alignment: Alignment.centerLeft,child: Text('Email', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
                             ),
                             const SizedBox(
                               height: 7,
@@ -73,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 errorStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 15)
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 15)
                               ),
                             ),
                           ],
@@ -82,9 +83,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(
                             height: 15.0,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Align(alignment: Alignment.centerLeft, child: const Text('Password', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 15.0),
+                            child: Align(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
                           ),
                           const SizedBox(
                             height: 10,
@@ -108,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             obscureText: Model.passwdVisibility,
                             decoration: kSignUpAndLogInScreenFieldDecoration.copyWith(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                               errorStyle: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -185,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Container(
                                 width: 40,
                                 height: 40,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(image: AssetImage('assets/images/google_icon.png'), fit: BoxFit.fill)
                                 ),
@@ -195,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     dynamic user = await GoogleLogIn().signInWithGoogle();
                                     if (user.runtimeType == UserCredential) {
                                       Model.changeValue();
-                                      //return Navigator.pushReplacementNamed(context, HomeScreen.homeScreen);
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BaseLayout()));
                                     }
                                     else {
                                       Model.changeValue();
@@ -203,30 +204,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
-                              Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                child: GestureDetector(
-                                  onTap: ()async{
-                                    Model.changeValue();
-                                    dynamic user = await FacebookLogin().signInWithFaceBook();
-                                    if (user.runtimeType == UserCredential) {
-                                      Model.changeValue();
-                                      //return Navigator.pushReplacementNamed(context, HomeScreen.homeScreen);
-                                    }
-                                    else {
-                                      Model.changeValue();
-                                    }
-                                  },
-                                  child: const Icon(Icons.facebook, color: Colors.blue, size: 45,),
-                                ),
-                              )
+                              // Container(
+                              //   width: 43,
+                              //   height: 40,
+                              //   decoration: const BoxDecoration(
+                              //     shape: BoxShape.circle,
+                              //       image: DecorationImage(image: AssetImage('assets/images/fb_logo.png'), fit: BoxFit.fill)
+                              //   ),
+                              //   child: GestureDetector(
+                              //     onTap: ()async{
+                              //       Model.changeValue();
+                              //       dynamic user = await FacebookLogin().signInWithFaceBook();
+                              //       if (user.runtimeType == UserCredential) {
+                              //         Model.changeValue();
+                              //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BaseLayout()));
+                              //       }
+                              //       else {
+                              //         Model.changeValue();
+                              //       }
+                              //     },
+                              //   ),
+                              // )
                             ],
                           ),
                           const SizedBox(
@@ -245,14 +246,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: (){
                                     Navigator.pushNamed(context, signUpScreen.signupscreen);
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Sign Up',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       shadows: [
                                         Shadow(
                                             color: primaryColor,
-                                            offset: const Offset(0.0, -0.8)
+                                            offset: Offset(0.0, -0.8)
                                         ),
                                       ],
                                       color: Colors.transparent,

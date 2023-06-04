@@ -27,7 +27,7 @@ class GoogleLogIn {
           if (methods.isNotEmpty) {
             final credential = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
             try {
-              var userDetails = await firebaseAuth.signInWithCredential(credential);
+              var userDetails = await FirebaseAuth.instance.signInWithCredential(credential);
               final userdetails = firebaseAuth.currentUser;
               final userID = userdetails!.uid;
               final userEmail = userdetails.email;
@@ -46,7 +46,10 @@ class GoogleLogIn {
             }
           }
           else{
-            return false;
+            GoogleSignIn _googleSignIn = GoogleSignIn();
+            await _googleSignIn.disconnect();
+            await firebaseAuth.signOut();
+            showToast('User does not exist.\nRegister User');
           }
         }
         else {
@@ -54,7 +57,7 @@ class GoogleLogIn {
         }
       }
       catch (e) {
-        googleSignOut();
+        await googleSignOut();
         showToast('Error contacting google servers.\nTry again in a while');
       }
     }

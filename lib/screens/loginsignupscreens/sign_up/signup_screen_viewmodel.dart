@@ -15,8 +15,8 @@ class SignUpModel extends ChangeNotifier {
   String password = '';
   bool passwd1Visibility = false;
   bool passwd2Visibility = false;
-  Icon password1FieldIcon = const Icon(Icons.visibility_off, color: Colors.grey,);
-  Icon password2FieldIcon = const Icon(Icons.visibility_off, color: Colors.grey,);
+  Icon password1FieldIcon = const Icon(Icons.visibility_off, color: Colors.white,);
+  Icon password2FieldIcon = const Icon(Icons.visibility_off, color: Colors.white,);
 
   changeValue(){
     overlay = !overlay;
@@ -26,13 +26,13 @@ class SignUpModel extends ChangeNotifier {
   password1VisibilityFunc() {
     if (passwd1Visibility == true) {
         passwd1Visibility = false;
-        password1FieldIcon = const Icon(Icons.visibility_outlined, color: Colors.grey,);
+        password1FieldIcon = const Icon(Icons.visibility_outlined, color: Colors.white,);
         notifyListeners();
     }
     else {
         passwd1Visibility = true;
         password1FieldIcon =
-        const Icon(Icons.visibility_off, color: Colors.grey,);
+        const Icon(Icons.visibility_off, color: Colors.white,);
       notifyListeners();
     }
   }
@@ -40,13 +40,13 @@ class SignUpModel extends ChangeNotifier {
   password2VisibilityFunc() {
     if (passwd2Visibility == true) {
         passwd2Visibility = false;
-        password2FieldIcon = const Icon(Icons.visibility_outlined, color: Colors.grey,);
+        password2FieldIcon = const Icon(Icons.visibility_outlined, color: Colors.white,);
       notifyListeners();
     }
     else {
         passwd2Visibility = true;
         password2FieldIcon =
-        const Icon(Icons.visibility_off, color: Colors.grey,);
+        const Icon(Icons.visibility_off, color: Colors.white,);
       notifyListeners();
     }
   }

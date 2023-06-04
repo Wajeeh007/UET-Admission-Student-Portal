@@ -14,17 +14,17 @@ class loginModel with ChangeNotifier{
   String email = '';
   String password = '';
   bool passwdVisibility = false;
-  Icon passwordFieldIcon = const Icon(Icons.visibility_off_outlined, color: Colors.grey,);
+  Icon passwordFieldIcon = const Icon(Icons.visibility_off_outlined, color: Colors.white,);
 
   passwordVisibilityFunc(){
     if(passwdVisibility == true){
       passwdVisibility = false;
-      passwordFieldIcon = const Icon(Icons.visibility_outlined, color: Colors.grey,);
+      passwordFieldIcon = const Icon(Icons.visibility_outlined, color: Colors.white,);
       notifyListeners();
     }
     else{
       passwdVisibility = true;
-      passwordFieldIcon = const Icon(Icons.visibility_off_outlined, color: Colors.grey,);
+      passwordFieldIcon = const Icon(Icons.visibility_off_outlined, color: Colors.white,);
       notifyListeners();
     }
   }
