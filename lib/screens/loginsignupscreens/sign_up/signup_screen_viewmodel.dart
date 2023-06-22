@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,8 +14,8 @@ class SignUpModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   String email = '';
   String password = '';
-  bool passwd1Visibility = false;
-  bool passwd2Visibility = false;
+  bool passwd1Visibility = true;
+  bool passwd2Visibility = true;
   Icon password1FieldIcon = const Icon(Icons.visibility_off, color: Colors.white,);
   Icon password2FieldIcon = const Icon(Icons.visibility_off, color: Colors.white,);
 
@@ -31,8 +32,7 @@ class SignUpModel extends ChangeNotifier {
     }
     else {
         passwd1Visibility = true;
-        password1FieldIcon =
-        const Icon(Icons.visibility_off, color: Colors.white,);
+        password1FieldIcon = const Icon(Icons.visibility_off, color: Colors.white,);
       notifyListeners();
     }
   }
@@ -70,17 +70,31 @@ class SignUpModel extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (validateAndSave() == true) {
       try {
-        final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-        if (newUser != null) {
-          final userName = _name;
-          final userEmail = email;
-          final userID = newUser.user!.uid;
-          await prefs.setString('userName', userName.toString());
-          await prefs.setString('email', userEmail.toString());
-          await prefs.setString('userID', userID);
+        final methods = await _auth.fetchSignInMethodsForEmail(email);
+        if(methods.isEmpty) {
+          final newUser = await _auth.createUserWithEmailAndPassword(
+              email: email, password: password);
+          if (newUser != null) {
+
+            await FirebaseFirestore.instance.collection('user_data').doc(newUser.user!.uid).set({
+              'admin': false,
+              'email': email,
+              'application_status': false
+            });
+            final userName = _name;
+            final userEmail = email;
+            final userID = newUser.user!.uid;
+            await prefs.setString('userName', userName.toString());
+            await prefs.setString('email', userEmail.toString());
+            await prefs.setString('userID', userID);
+            overlay = false;
+            proceed = true;
+            notifyListeners();
+          }
+        } else{
           overlay = false;
-          proceed = true;
           notifyListeners();
+          showToast('User already exists');
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-already-exists') {

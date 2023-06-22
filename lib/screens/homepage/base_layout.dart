@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_admission/screens/admission_form/admission_form_1.dart';
-import '../admission_form/admission_form_4.dart';
+import '../admission_form/screen_one/screen_one_view.dart';
 import 'homepage_ui.dart';
 
 class BaseLayout extends StatefulWidget {
@@ -13,7 +12,7 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   final pages = [
     HomePage(),
-    AdmissionFormScreen1()
+    ScreenOneView()
   ];
 
   int pageIndex = 0;

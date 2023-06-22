@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:online_admission/constants.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -149,112 +149,112 @@ class GoogleSignUp {
   }
 }
 
-class FacebookLogin {
-  Future<dynamic> signInWithFaceBook() async {
-    final connCheck = await checkConnection();
-    if(connCheck == true) {
-      try {
-        final LoginResult loginResult = await FacebookAuth.instance.login();
-        if(loginResult.accessToken == null){
-          showToast('No Account Selected');
-          FacebookAuth.instance.logOut();
-          return null;
-        }
-        else {
-          final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
-          final userDetails = await FacebookAuth.instance.getUserData();
-          final methods = await firebaseAuth.fetchSignInMethodsForEmail(userDetails['email']);
-          if (methods.isNotEmpty) {
-            final details = await firebaseAuth.signInWithCredential(facebookAuthCredential);
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            final userEmail = details.user?.email;
-            final userID = details.user?.uid;
-            final userName = details.user?.displayName;
-            await prefs.setString("email", "$userEmail");
-            await prefs.setString('userID', "$userID");
-            await prefs.setString('userName', "$userName");
-            await prefs.setBool('isFacebookUser', true);
-            return details;
-          }
-          else {
-            showToast('User does not exist.\nRegister User');
-            return null;
-          }
-        }
-      } catch (e) {
-        showToast('Unexpected Error.\nTry Again');
-      }
-    }
-    else{
-      showToast('No Internet Connection.');
-    }
-  }
-  signOut()async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final connCheck = await checkConnection();
-    if(connCheck == true) {
-      try {
-        await FacebookAuth.instance.logOut();
-        await firebaseAuth.signOut();
-        await _firestore.terminate();
-        await prefs.clear();
-      }
-      catch (e){
-        showToast('Unexpected Error.\nCannot Logout');
-      }
-    }
-    else{
-      showToast('No Internet Connection.\nCannot Logout');
-    }
-  }
-}
-
-class FacebookSignUp{
-  Future<dynamic> signInWithFaceBook() async {
-    final connCheck = await checkConnection();
-    if(connCheck == true) {
-      try {
-        final LoginResult loginResult = await FacebookAuth.instance.login();
-        if(loginResult.accessToken == null){
-          showToast('No Account Selected');
-          FacebookAuth.instance.logOut();
-          return null;
-        }
-        else {
-          final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
-          final userDetails = await FacebookAuth.instance.getUserData();
-          final methods = await firebaseAuth.fetchSignInMethodsForEmail(userDetails['email']);
-          if (methods.isEmpty) {
-              final details = await firebaseAuth.signInWithCredential(facebookAuthCredential);
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              final userEmail = details.user?.email;
-              final userID = details.user?.uid;
-              final userName = details.user?.displayName;
-              await prefs.setString("email", "$userEmail");
-              await prefs.setString('userID', "$userID");
-              await prefs.setString('userName', "$userName");
-              await prefs.setBool('isFacebookUser', true);
-              final userData = {
-                "email": "$userEmail",
-                "name": "$userName",
-                "admin": false
-              };
-              await _firestore.collection('user_data').doc(userID).set(userData);
-              return details;
-            }
-          else {
-            showToast('User already exists.\nLog In');
-            return null;
-          }
-        }
-      } catch (e) {
-        showToast('Unexpected Error.\nTry Again');
-        return null;
-      }
-    }
-    else{
-      showToast('No Internet Connection.');
-      return null;
-    }
-  }
-}
+// class FacebookLogin {
+//   Future<dynamic> signInWithFaceBook() async {
+//     final connCheck = await checkConnection();
+//     if(connCheck == true) {
+//       try {
+//         final LoginResult loginResult = await FacebookAuth.instance.login();
+//         if(loginResult.accessToken == null){
+//           showToast('No Account Selected');
+//           FacebookAuth.instance.logOut();
+//           return null;
+//         }
+//         else {
+//           final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+//           final userDetails = await FacebookAuth.instance.getUserData();
+//           final methods = await firebaseAuth.fetchSignInMethodsForEmail(userDetails['email']);
+//           if (methods.isNotEmpty) {
+//             final details = await firebaseAuth.signInWithCredential(facebookAuthCredential);
+//             SharedPreferences prefs = await SharedPreferences.getInstance();
+//             final userEmail = details.user?.email;
+//             final userID = details.user?.uid;
+//             final userName = details.user?.displayName;
+//             await prefs.setString("email", "$userEmail");
+//             await prefs.setString('userID', "$userID");
+//             await prefs.setString('userName', "$userName");
+//             await prefs.setBool('isFacebookUser', true);
+//             return details;
+//           }
+//           else {
+//             showToast('User does not exist.\nRegister User');
+//             return null;
+//           }
+//         }
+//       } catch (e) {
+//         showToast('Unexpected Error.\nTry Again');
+//       }
+//     }
+//     else{
+//       showToast('No Internet Connection.');
+//     }
+//   }
+//   signOut()async{
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     final connCheck = await checkConnection();
+//     if(connCheck == true) {
+//       try {
+//         await FacebookAuth.instance.logOut();
+//         await firebaseAuth.signOut();
+//         await _firestore.terminate();
+//         await prefs.clear();
+//       }
+//       catch (e){
+//         showToast('Unexpected Error.\nCannot Logout');
+//       }
+//     }
+//     else{
+//       showToast('No Internet Connection.\nCannot Logout');
+//     }
+//   }
+// }
+//
+// class FacebookSignUp{
+//   Future<dynamic> signInWithFaceBook() async {
+//     final connCheck = await checkConnection();
+//     if(connCheck == true) {
+//       try {
+//         final LoginResult loginResult = await FacebookAuth.instance.login();
+//         if(loginResult.accessToken == null){
+//           showToast('No Account Selected');
+//           FacebookAuth.instance.logOut();
+//           return null;
+//         }
+//         else {
+//           final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+//           final userDetails = await FacebookAuth.instance.getUserData();
+//           final methods = await firebaseAuth.fetchSignInMethodsForEmail(userDetails['email']);
+//           if (methods.isEmpty) {
+//               final details = await firebaseAuth.signInWithCredential(facebookAuthCredential);
+//               SharedPreferences prefs = await SharedPreferences.getInstance();
+//               final userEmail = details.user?.email;
+//               final userID = details.user?.uid;
+//               final userName = details.user?.displayName;
+//               await prefs.setString("email", "$userEmail");
+//               await prefs.setString('userID', "$userID");
+//               await prefs.setString('userName', "$userName");
+//               await prefs.setBool('isFacebookUser', true);
+//               final userData = {
+//                 "email": "$userEmail",
+//                 "name": "$userName",
+//                 "admin": false
+//               };
+//               await _firestore.collection('user_data').doc(userID).set(userData);
+//               return details;
+//             }
+//           else {
+//             showToast('User already exists.\nLog In');
+//             return null;
+//           }
+//         }
+//       } catch (e) {
+//         showToast('Unexpected Error.\nTry Again');
+//         return null;
+//       }
+//     }
+//     else{
+//       showToast('No Internet Connection.');
+//       return null;
+//     }
+//   }
+// }

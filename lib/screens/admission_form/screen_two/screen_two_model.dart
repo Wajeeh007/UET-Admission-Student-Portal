@@ -1,8 +1,7 @@
-class SecondPageDetails{
-  String? presentAddress, permanentAddress, incomeSource, incomeInLetters, seatType, employerName, employerAddress, boardName, paperType;
-  int? year, rollNumber, obtainedMarks, totalMarks, percentage;
+class SecondPageModel{
+  String? year, rollNumber, obtainedMarks, totalMarks, percentage, presentAddress, permanentAddress, incomeSource, incomeInLetters, seatType, employerName, employerAddress, boardName, paperType;
 
-  SecondPageDetails({
+  SecondPageModel({
     this.presentAddress,
     this.permanentAddress,
     this.incomeSource,
@@ -36,7 +35,7 @@ class SecondPageDetails{
     'boardName': boardName
   };
 
-  factory SecondPageDetails.fromJson(Map<String, dynamic>json) => SecondPageDetails(
+  factory SecondPageModel.fromJson(Map<String, dynamic>json) => SecondPageModel(
     presentAddress: json['presentAddress'],
     permanentAddress: json['permanentAddress'],
     incomeSource: json['incomeSource'],

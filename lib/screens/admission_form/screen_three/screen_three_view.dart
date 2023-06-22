@@ -1,88 +1,21 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:online_admission/screens/admission_form/models/third_page_details.dart';
+import 'package:get/get.dart';
+import 'package:online_admission/screens/admission_form/screen_three/screen_three_model.dart';
+import 'package:online_admission/screens/admission_form/screen_three/screen_three_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../constants.dart';
+import '../../../widgets/admission_form_textformfields.dart';
+import '../screen_four/screen_four_view.dart';
+import '../screen_four/screen_four_viewmodel.dart';
 
-import '../../constants.dart';
-import '../../widgets/admission_form_textformfields.dart';
-import 'admission_form_4.dart';
+class ScreenThreeView extends StatelessWidget {
 
-class AdmissionFormScreen3 extends StatefulWidget {
-  static const admissionFormScreen3 = 'admissionformscreen3';
+  ScreenThreeView({super.key});
 
-  @override
-  State<AdmissionFormScreen3> createState() => _AdmissionFormScreen3State();
-}
-
-class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
-
-  TextEditingController yearController = TextEditingController();
-  TextEditingController rollNumberController = TextEditingController();
-  TextEditingController boardNameController = TextEditingController();
-  TextEditingController marksObtainedController = TextEditingController();
-  TextEditingController totalMarksController = TextEditingController();
-  TextEditingController percentageController = TextEditingController();
-
-  List paperSelection=['Annual', 'Supplementary'];
-  String? paperSelect;
-
-  final formKey = GlobalKey<FormState>();
-
-  bool paperSelectionCheck = false;
-
-  Row addRadioButton(int btnValue, String title, int givenValue, String? selectedValue, List<dynamic> list) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Radio(
-          fillColor: MaterialStateColor.resolveWith((states) => primaryColor),
-          activeColor: Theme.of(context).primaryColor,
-          value: list[givenValue],
-          groupValue: null,
-          onChanged: (value){
-            setState(() {
-              selectedValue=value;
-            });
-          },
-        ),
-        Text(
-          title,
-          style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w600
-          ),
-        )
-      ],
-    );
-  }
-
-  getData()async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var thirdPageDetailsInString = await prefs.getString('thirdPageDetails');
-    if(thirdPageDetailsInString == null){
-      return;
-    }
-    else{
-      var details = ThirdPageDetails.fromJson(jsonDecode(thirdPageDetailsInString));
-      yearController.text = details.year.toString();
-      rollNumberController.text = details.rollNo.toString();
-      boardNameController.text = details.boardName.toString();
-      paperSelect = details.paperType;
-      marksObtainedController.text = details.obtainedMarks.toString();
-      totalMarksController.text = details.totalMarks.toString();
-      percentageController.text = details.percentage.toString();
-    }
-  }
-
-  @override
-  void initState() {
-    getData();
-    super.initState();
-  }
-
+  final ScreenThreeViewModel viewModel = Get.find();
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -119,7 +52,6 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
             ),
             body: Stack(
               fit: StackFit.expand,
-//              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -140,13 +72,14 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                     height: 18,
                                   ),
                                   Form(
-                                    key: formKey,
+                                    key: viewModel.formKey,
                                     child: Column(
                                       children: [
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             AdmissionFormFields(
+                                              fieldController: viewModel.yearController,
                                               fieldName: 'Year:',
                                               fieldValidationFunc: (value){
                                                 if(value == null || value == ''){
@@ -166,6 +99,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                               keyboardType: TextInputType.number,
                                             ),
                                             AdmissionFormFields(
+                                              fieldController: viewModel.rollNumberController,
                                               fieldName: 'Roll Number:',
                                               fieldValidationFunc: (value){
                                                 if(value == null || value == ''){
@@ -198,7 +132,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                           keyboardType: TextInputType.text,
                                           fieldName: 'Name of Board:',
                                           takeWholeWidth: true,
-                                          fieldController: boardNameController,
+                                          fieldController: viewModel.boardNameController,
                                         ),
                                         const SizedBox(
                                           height: 17,
@@ -206,11 +140,11 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                                           children: [
-                                            addRadioButton(0, paperSelection[0], 0, paperSelect, paperSelection),
-                                            addRadioButton(1, paperSelection[1], 1, paperSelect, paperSelection)
+                                            addPaperSelectionRadioButton(0, viewModel.paperSelection[0]),
+                                            addPaperSelectionRadioButton(1, viewModel.paperSelection[1])
                                           ],
                                         ),
-                                        paperSelectionCheck ? const Padding(
+                                        Obx(() => viewModel.paperSelectionCheck.value ? const Padding(
                                           padding: EdgeInsets.symmetric(vertical: 6.0),
                                           child: Text(
                                             'Select An Option',
@@ -221,6 +155,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                             ),
                                           ),
                                         ) : Container(),
+                                        ),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -230,17 +165,17 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                                 if(value == null || value == ''){
                                                   return 'Enter Marks';
                                                 }
-                                                else if(totalMarksController.text == ''){
+                                                else if(viewModel.totalMarksController.text == ''){
                                                   return null;
                                                 }
-                                                else if(int.parse(totalMarksController.text) < int.parse(marksObtainedController.text)){
+                                                else if(int.parse(viewModel.totalMarksController.text) < int.parse(viewModel.marksObtainedController.text)){
                                                   return 'Invalid Value';
                                                 }
                                                 else {
                                                   return null;
                                                 }
                                               },
-                                              fieldController: marksObtainedController,
+                                              fieldController: viewModel.marksObtainedController,
                                               inputFilter: [
                                                 FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                                 FilteringTextInputFormatter.digitsOnly,
@@ -258,7 +193,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                                   return null;
                                                 }
                                               },
-                                              fieldController: totalMarksController,
+                                              fieldController: viewModel.totalMarksController,
                                               inputFilter: [
                                                 FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                                 FilteringTextInputFormatter.digitsOnly,
@@ -269,6 +204,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                           ],
                                         ),
                                         AdmissionFormFields(
+                                          keyboardType: TextInputType.number,
                                           fieldName: 'Percentage:',
                                           fieldValidationFunc: (value){
                                             if(value == null || value == ''){
@@ -281,7 +217,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                               return null;
                                             }
                                           },
-                                          fieldController: percentageController,
+                                          fieldController: viewModel.percentageController,
                                           inputFilter: [
                                             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                             FilteringTextInputFormatter.digitsOnly,
@@ -297,7 +233,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                 ),
                 Positioned(
                   bottom: 0,
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 65,
                     child: Padding(
@@ -318,7 +254,7 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                             ),
                             child: MaterialButton(
                               onPressed: (){
-                                Navigator.pop(context);
+                                Get.back();
                               },
                               child: const Text(
                                 'Go Back',
@@ -351,25 +287,30 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
                                   ),
                                 ),
                                 onPressed: ()async {
-                                  if(paperSelect == null){
-                                    setState(() {
-                                      paperSelectionCheck = true;
-                                    });
+                                  viewModel.loader.value = true;
+                                  if(viewModel.paperSelect.value == ''){
+                                    viewModel.loader.value = false;
+                                    viewModel.paperSelectionCheck.value = true;
                                   }
-                                  if (formKey.currentState!.validate()) {
-                                      ThirdPageDetails details = ThirdPageDetails(
-                                          year: int.parse(yearController.text),
-                                          rollNo: int.parse(rollNumberController.text),
-                                          boardName: boardNameController.text,
-                                          obtainedMarks: int.parse(marksObtainedController.text),
-                                          totalMarks: int.parse(totalMarksController.text),
-                                          percentage: int.parse(percentageController.text)
+                                  if (viewModel.formKey.currentState!.validate()) {
+                                      ThirdPageModel details = ThirdPageModel(
+                                          year: viewModel.yearController.text,
+                                          rollNo: viewModel.rollNumberController.text,
+                                          boardName: viewModel.boardNameController.text,
+                                          obtainedMarks: viewModel.marksObtainedController.text,
+                                          totalMarks: viewModel.totalMarksController.text,
+                                          percentage: viewModel.percentageController.text,
+                                        paperType: viewModel.paperSelect.value
                                       );
                                       var jsonConverted = jsonEncode(details);
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      await prefs.setString('thirdPageDetails', jsonConverted);
-                                      Navigator.pushNamed(context, AdmissionFormScreen4.admissionFormScreen4);
-                                    }
+                                      await prefs.setString('3', jsonConverted);
+                                      viewModel.loader.value = false;
+                                      Get.put(ScreenFourViewModel());
+                                        Get.to(() => ScreenFourView());
+                                  } else{
+                                    viewModel.loader.value = false;
+                                  }
                                 }
                             ),
                           ),
@@ -381,6 +322,32 @@ class _AdmissionFormScreen3State extends State<AdmissionFormScreen3> {
               ],
             )
         )
+    );
+  }
+
+  addPaperSelectionRadioButton(int btnValue, String title) {
+    return Obx(() => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Radio(
+            fillColor: MaterialStateColor.resolveWith((states) => primaryColor),
+            activeColor: Theme.of(Get.context!).primaryColor,
+            value: viewModel.paperSelection[btnValue],
+            groupValue: viewModel.paperSelect.value,
+            onChanged: (value){
+              viewModel.paperSelect.value = value;
+            },
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w600
+            ),
+          )
+        ],
+      ),
     );
   }
 }

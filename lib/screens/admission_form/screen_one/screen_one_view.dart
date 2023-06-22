@@ -1,121 +1,21 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:online_admission/constants.dart';
-import 'package:online_admission/screens/admission_form/models/first_page_details.dart';
-import 'package:online_admission/screens/homepage/base_layout.dart';
-import 'package:online_admission/widgets/admission_form_textformfields.dart';
+import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
+import 'package:online_admission/screens/admission_form/screen_one/screen_one_viewmodel.dart';
+import 'package:online_admission/screens/admission_form/screen_two/screen_two_view.dart';
+import 'package:online_admission/screens/admission_form/screen_two/screen_two_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../widgets/admission_form_date_picker.dart';
-import 'admission_form_2.dart';
+import '../../../widgets/admission_form_date_picker.dart';
+import '../../../widgets/admission_form_textformfields.dart';
+import '../../homepage/base_layout.dart';
 
-class AdmissionFormScreen1 extends StatefulWidget {
+class ScreenOneView extends StatelessWidget {
 
-  static const admissionFormScreen1 = 'admissionformscreen1';
-
-  @override
-  State<AdmissionFormScreen1> createState() => _AdmissionFormScreen1State();
-}
-
-class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
-
-  TextEditingController meritNumberController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController fatherNameController = TextEditingController();
-  TextEditingController religionController = TextEditingController();
-  TextEditingController fatherOccupationController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController mobileNumberController = TextEditingController();
-  TextEditingController nationalityController = TextEditingController();
-  TextEditingController cnicController = TextEditingController();
-  TextEditingController eteaIDController = TextEditingController();
-
-  final formKey = GlobalKey<FormState>();
-
-  List maritalStatus=['Single', 'Married'];
-
-  String maritalStatusSelect = 'Single';
-
-  Row addRadioButton(int btnValue, String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Radio(
-          fillColor: MaterialStateColor.resolveWith((states) => primaryColor),
-          activeColor: Theme.of(context).primaryColor,
-          value: maritalStatus[btnValue],
-          groupValue: 'Single',
-          onChanged: (value){
-            setState(() {
-              maritalStatusSelect=value;
-            });
-          },
-        ),
-        Text(
-          title,
-          style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.w600
-          ),
-        )
-      ],
-    );
-  }
-  late DateTime year;
-
-  getData()async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var firstPageDetailsInString = await prefs.getString('firstPageDetails');
-    if (firstPageDetailsInString == null) {
-      return;
-    }
-    else {
-      final details = FirstPageDetails.fromJson(jsonDecode(firstPageDetailsInString));
-      setState(() {
-        eteaIDController.text = details.eteaID.toString();
-        meritNumberController.text = details.meritListNo.toString();
-        departmentName = details.departmentName;
-        campus = details.campusName;
-        fatherNameController.text = details.fatherName.toString();
-        fatherOccupationController.text = details.fatherOccupation.toString();
-        dateController.text = details.dateOfBirth.toString();
-        religionController.text = details.religion.toString();
-        mobileNumberController.text = details.mobileNo.toString();
-        cnicController.text = details.cnic.toString();
-        nationalityController.text = details.nationality.toString();
-        maritalStatusSelect = details.maritalStatus.toString();
-        nameController.text = details.studentName.toString();
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    getData();
-    DateTime currentDate = DateTime.now();
-    year = DateTime(currentDate.year);
-    super.initState();
-  }
-
-  String? departmentName;
-  String? campus;
-  bool departmentNameCheck = false;
-  bool campusNameCheck = false;
-
-  List<DropdownMenuItem> departmentList = [
-    const DropdownMenuItem(child: Text('Mechanical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Mechanical',),
-    const DropdownMenuItem(child: Text('Electrical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Electrical',),
-    const DropdownMenuItem(child: Text('Civil', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Civil',),
-    const DropdownMenuItem(child: Text('Industrial', textAlign: TextAlign.end, style: TextStyle(color: Colors.black)), value: 'Industrial',),
-    const DropdownMenuItem(child: Text('Mechatronics', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Mechatronics',),
-    const DropdownMenuItem(child: Text('Agriculture', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Agriculture',),
-    const DropdownMenuItem(child: Text('Mining', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Mining',),
-    const DropdownMenuItem(child: Text('Chemical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Chemical',),
-    const DropdownMenuItem(child: Text('Computer Sciences', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Computer Sciences',),
-    const DropdownMenuItem(child: Text('System Engieering', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value:'System Engineering',),
-  ];
+  static const screenOneView = 'screenoneview';
+  final ScreenOneViewModel viewModel = Get.put(ScreenOneViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -161,14 +61,14 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                     ),
                   ),
                   Form(
-                    key: formKey,
+                    key: viewModel.formKey,
                     child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AdmissionFormFields(
-                              fieldController: eteaIDController,
+                              fieldController: viewModel.eteaIDController,
                               inputFilter: [
                                 FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                 FilteringTextInputFormatter.digitsOnly
@@ -189,7 +89,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                               takeWholeWidth: false,
                             ),
                             AdmissionFormFields(
-                                fieldController: meritNumberController,
+                                fieldController: viewModel.meritNumberController,
                               inputFilter: [
                                 FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                 FilteringTextInputFormatter.digitsOnly
@@ -238,40 +138,54 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  DropdownButtonFormField(
-                                    isExpanded: false,
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.only(left: 31, top: 12),
-                                      hintStyle: TextStyle(
-                                        overflow: TextOverflow.fade,
-                                        color: Colors.grey,
+                                  Obx(() => DropdownButtonFormField(
+                                      isExpanded: false,
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.only(left: 31, top: 12),
+                                        hintStyle: TextStyle(
+                                          overflow: TextOverflow.fade,
+                                          color: Colors.grey,
+                                        ),
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.black,
+                                                width: 1
+                                            )
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.black,
+                                                width: 1
+                                            )
+                                        ),
                                       ),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black,
-                                              width: 1
-                                          )
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black,
-                                              width: 1
-                                          )
-                                      ),
+                                      items: viewModel.departmentList,
+                                      onChanged: (value){
+                                          viewModel.departmentName.value = value;
+                                          viewModel.departmentNameCheck.value = false;
+                                          value == 'Mechanical' || value == 'Computer Sciences' ||
+                                              value == 'Industrial' ? viewModel.campusList.addAll([
+                                                DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                            DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+                                          ]) : viewModel.departmentName.value == 'Electrical' ? viewModel.campusList.addAll([
+                                            DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                            DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+                                            DropdownMenuItem(child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Kohat'),
+                                            DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+                                          ]) : viewModel.departmentName.value == 'Civil' ? viewModel.campusList.addAll([
+                                            DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                            DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+                                            DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+                                          ]) : viewModel.campusList.add(
+                                            DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                          );
+                                      },
+                                      value: viewModel.departmentName.value,
                                     ),
-                                    items: departmentList,
-                                    onChanged: (value){
-                                      setState(() {
-                                        departmentName = value;
-                                        campus = null;
-                                        departmentNameCheck = false;
-                                      });
-                                    },
-                                    value: departmentName,
                                   ),
-                                  departmentNameCheck == true ? const Padding(
+                                  Obx(() => viewModel.departmentNameCheck.value == true ? const Padding(
                                     padding: EdgeInsets.only(top: 4.0),
                                     child: Text(
                                       'Choose Department',
@@ -283,7 +197,8 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                                       ),
                                     ),
                                   ) : Container(),
-                                ],
+                                  )
+                                    ],
                               ),
                             ),
                             const SizedBox(
@@ -302,95 +217,46 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                         const SizedBox(
                           height: 12,
                         ),
-                        departmentName != null ? Row(
+                        viewModel.departmentName.value != '' ? Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             SizedBox(
-                              width: MediaQuery.of(context).size.width/3.3,
+                              width: MediaQuery.of(context).size.width/2.8,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  DropdownButtonFormField(
-                                    isExpanded: false,
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.only(left: 14, top: 10),
-                                      hintStyle: TextStyle(
-                                        overflow: TextOverflow.fade,
-                                        color: Colors.grey,
+                                  Obx(() => DropdownButtonFormField(
+                                      isExpanded: false,
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.only(left: 14, top: 10),
+                                        hintStyle: TextStyle(
+                                          overflow: TextOverflow.fade,
+                                          color: Colors.grey,
+                                        ),
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.black,
+                                                width: 1
+                                            )
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.black,
+                                                width: 1
+                                            )
+                                        ),
                                       ),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black,
-                                              width: 1
-                                          )
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black,
-                                              width: 1
-                                          )
-                                      ),
+                                      items: viewModel.campusList,
+                                      onChanged: (value){
+                                        viewModel.campus.value = value.toString();
+                                        viewModel.campusNameCheck.value = false;
+                                      },
+                                      value: viewModel.campus.value,
                                     ),
-                                    items: departmentName == 'Mechanical'
-                                        || departmentName == 'Computer Sciences' ||
-                                      departmentName == 'Industrial' ? <String>['Peshawar', 'Jalozai'].map<DropdownMenuItem<String>>((String e) {
-                                      return DropdownMenuItem<String>(
-                                        alignment: Alignment.bottomRight,
-                                        value: e,
-                                        child: Text(
-                                          e,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      );
-                                    }).toList() : departmentName == 'Electrical' ? <String>['Peshawar', 'Jalozai', 'Kohat', 'Bannu'].map<DropdownMenuItem<String>>((String e) {
-                                      return DropdownMenuItem<String>(
-                                        alignment: Alignment.center,
-                                        value: e,
-                                        child: Text(
-                                          e,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      );
-                                    }).toList() : departmentName == 'Civil' ? <String>['Peshawar', 'Jalozai', 'Bannu'].map<DropdownMenuItem<String>>((String e) {
-                                      return DropdownMenuItem<String>(
-                                        value: e,
-                                        child: Text(
-                                          e,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      );
-                                    }).toList() : <String>['Peshawar'].map<DropdownMenuItem<String>>((String e) {
-                                      return DropdownMenuItem<String>(
-                                        value: e,
-                                        child: Text(
-                                          e,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value){
-                                      setState(() {
-                                        campus = value;
-                                        campusNameCheck = false;
-                                      });
-                                    },
-                                    value: campus,
                                   ),
-                                  campusNameCheck == true ? const Padding(
+                                  Obx(() => viewModel.campusNameCheck.value == true ? const Padding(
                                     padding: EdgeInsets.only(top: 4.0),
                                     child: Text(
                                       'Choose Campus',
@@ -401,6 +267,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                                       ),
                                     ),
                                   ) : Container()
+                                  )
                                 ],
                               ),
                             ),
@@ -416,13 +283,13 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                               ),
                             ),
                           ],
-                        ) : Container(), 
+                        ) : Container(),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AdmissionFormFields(
-                              fieldController: nameController,
+                              fieldController: viewModel.nameController,
                               fieldName: 'Name:',
                               inputFilter: [
                                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]+|\s')),
@@ -441,7 +308,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                               receivedWidth: MediaQuery.of(context).size.width/3.3,
                             ),
                             AdmissionFormFields(
-                              fieldController: religionController,
+                              fieldController: viewModel.religionController,
                               inputFilter: [
                                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]+|\s')),
                               ],
@@ -457,7 +324,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                           ],
                         ),
                         AdmissionFormFields(
-                          fieldController: fatherNameController,
+                          fieldController: viewModel.fatherNameController,
                           fieldName: 'Father\'s Name:',
                           inputFilter: [
                             FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]+|\s')),
@@ -476,7 +343,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                           takeWholeWidth: true,
                         ),
                         AdmissionFormFields(
-                          fieldController: fatherOccupationController,
+                          fieldController: viewModel.fatherOccupationController,
                           fieldName: 'Father\'s Occupation:',
                           inputFilter: [
                             FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z-]+|\s')),
@@ -491,14 +358,14 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                         ),
                         DateOfBirthForm(
                           fieldName: 'Date of Birth:',
-                          fieldController: dateController,
+                          fieldController: viewModel.dateController,
                           receivedWidth: MediaQuery.of(context).size.width/3.5,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AdmissionFormFields(
-                              fieldController: mobileNumberController,
+                              fieldController: viewModel.mobileNumberController,
                               fieldValidationFunc: (value){
                                 if(value == null || value == ''){
                                   return 'Enter Mobile Number';
@@ -520,7 +387,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                             ),
                             AdmissionFormFields(
                               fieldName: 'CNIC:',
-                              fieldController: cnicController,
+                              fieldController: viewModel.cnicController,
                               fieldValidationFunc: (value){
                                 if(value == '' || value == null){
                                   return 'Enter CNIC';
@@ -546,7 +413,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                         ),
                         AdmissionFormFields(
                           fieldName: 'Nationality',
-                          fieldController: nationalityController,
+                          fieldController: viewModel.nationalityController,
                           fieldValidationFunc: (value){
                             if(value == null || value == ''){
                               return 'Enter Nationality';
@@ -572,8 +439,8 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                           const SizedBox(
                             width: 12,
                           ),
-                            addRadioButton(0, maritalStatus[0]),
-                            addRadioButton(1, maritalStatus[1])
+                            addRadioButton(0, viewModel.maritalStatus[0]),
+                            addRadioButton(1, viewModel.maritalStatus[1])
                           ],
                         ),
                       ],
@@ -597,7 +464,7 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                           ),
                           child: MaterialButton(
                               onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => BaseLayout()));
+                                Get.off(() => BaseLayout());
                               },
                             child: const Text(
                               'Cancel',
@@ -630,38 +497,41 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
                                 ),
                               ),
                               onPressed: ()async {
-                                if (formKey.currentState!.validate()) {
-                                  if (departmentName == null) {
-                                    setState(() {
-                                      departmentNameCheck = true;
-                                    });
+                                viewModel.loader.value = true;
+                                if (viewModel.formKey.currentState!.validate()) {
+                                  if (viewModel.departmentName.value == 'Choose Department') {
+                                    viewModel.departmentNameCheck.value = true;
+                                    viewModel.loader.value = false;
                                   }
-                                  else if (campusNameCheck == true) {
-                                    setState(() {
-                                      campusNameCheck = true;
-                                    });
+                                  else if (viewModel.campus.value == 'Choose Campus') {
+                                    viewModel.campusNameCheck.value = true;
+                                    viewModel.loader.value = false;
                                   }
                                   else {
-                                    FirstPageDetails details = FirstPageDetails(
-                                        eteaID: int.parse(eteaIDController.text),
-                                        meritListNo: int.parse(meritNumberController.text),
-                                        studentName: nameController.text,
-                                        fatherOccupation: fatherOccupationController.text,
-                                        fatherName: fatherNameController.text,
-                                        departmentName: departmentName,
-                                        campusName: campus,
-                                        nationality: nationalityController.text,
-                                        religion: religionController.text,
-                                        mobileNo: mobileNumberController.text,
-                                        cnic: cnicController.text,
-                                        maritalStatus: maritalStatusSelect,
-                                      dateOfBirth: dateController.text,
+                                    FirstPageModel details = FirstPageModel(
+                                        eteaID: viewModel.eteaIDController.text,
+                                        meritListNo: viewModel.meritNumberController.text,
+                                        studentName: viewModel.nameController.text,
+                                        fatherOccupation: viewModel.fatherOccupationController.text,
+                                        fatherName: viewModel.fatherNameController.text,
+                                        departmentName: viewModel.departmentName.value,
+                                        campusName: viewModel.campus.value,
+                                        nationality: viewModel.nationalityController.text,
+                                        religion: viewModel.religionController.text,
+                                        mobileNo: viewModel.mobileNumberController.text,
+                                        cnic: viewModel.cnicController.text,
+                                        maritalStatus: viewModel.maritalStatusSelect.value,
+                                      dateOfBirth: viewModel.dateController.text,
                                     );
                                     var jsonConverted = jsonEncode(details);
                                     SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    await prefs.setString('firstPageDetails', jsonConverted);
-                                    Navigator.pushNamed(context, AdmissionFormScreen2.admissionFormScreen2);
+                                    await prefs.setString('1', jsonConverted);
+                                    viewModel.loader.value = false;
+                                    Get.put(ScreenTwoViewModel());
+                                    Get.to(()=>ScreenTwoView());
                                   }
+                                }else{
+                                  viewModel.loader.value = false;
                                 }
                               }
                           ),
@@ -674,6 +544,32 @@ class _AdmissionFormScreen1State extends State<AdmissionFormScreen1> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  addRadioButton(int btnValue, String title) {
+    return Obx(() => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Radio(
+            fillColor: MaterialStateColor.resolveWith((states) => primaryColor),
+            activeColor: Theme.of(Get.context!).primaryColor,
+            value: viewModel.maritalStatus[btnValue],
+            groupValue: viewModel.maritalStatusSelect.value,
+            onChanged: (value){
+              viewModel.maritalStatusSelect.value=value;
+            },
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w600
+            ),
+          )
+        ],
       ),
     );
   }

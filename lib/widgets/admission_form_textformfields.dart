@@ -36,22 +36,65 @@ class _AdmissionFormFieldsState extends State<AdmissionFormFields> {
   }
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          widget.fieldName.toString(),
-          style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 14
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            widget.fieldName.toString(),
+            style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                fontSize: 14
+            ),
           ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        widget.takeWholeWidth ? Expanded(
-          child: TextFormField(
+          const SizedBox(
+            width: 5,
+          ),
+          widget.takeWholeWidth ? Expanded(
+            child: TextFormField(
+              initialValue: widget.fieldController?.text == '' ? null : widget.fieldController?.text,
+              keyboardType: widget.keyboardType ?? TextInputType.text,
+              onChanged: (value){
+                setState(() {
+                  widget.fieldController!.text = value.toString();
+                });
+              },
+              inputFormatters: widget.inputFilter,
+              validator: widget.fieldValidationFunc,
+              cursorColor: Colors.black,
+              textAlignVertical: TextAlignVertical.center,
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14
+              ),
+              decoration: const InputDecoration(
+                errorMaxLines: 2,
+                  constraints: BoxConstraints(
+                    maxHeight: 38
+                  ),
+                  errorStyle: TextStyle(
+                      fontWeight: FontWeight.bold
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 1,
+                      )
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 2,
+                      )
+                  ),
+                  contentPadding: EdgeInsets.only(left: 10, bottom: 15)
+              ),
+            ),
+          ) : TextFormField(
+            initialValue: widget.fieldController?.text == '' ? null : widget.fieldController?.text,
             keyboardType: widget.keyboardType ?? TextInputType.text,
             onChanged: (value){
               setState(() {
@@ -67,70 +110,31 @@ class _AdmissionFormFieldsState extends State<AdmissionFormFields> {
                 fontWeight: FontWeight.w500,
                 fontSize: 14
             ),
-            decoration: const InputDecoration(
-              errorMaxLines: 2,
+            decoration: InputDecoration(
+                errorMaxLines: 2,
                 constraints: BoxConstraints(
-                  maxHeight: 38
+                  maxWidth: widget.receivedWidth == null ? MediaQuery.of(context).size.width/4.2 : widget.receivedWidth!.toDouble(),
                 ),
-                errorStyle: TextStyle(
+                errorStyle: const TextStyle(
                     fontWeight: FontWeight.bold
                 ),
-                enabledBorder: UnderlineInputBorder(
+                enabledBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.black,
                       width: 1,
                     )
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.black,
                       width: 2,
                     )
                 ),
-                contentPadding: EdgeInsets.only(left: 10, bottom: 3)
+                contentPadding: const EdgeInsets.only(left: 10, bottom: 3)
             ),
           ),
-        ) : TextFormField(
-          initialValue: widget.fieldController?.text == '' ? null : widget.fieldController?.text,
-          keyboardType: widget.keyboardType ?? TextInputType.text,
-          onChanged: (value){
-            setState(() {
-              widget.fieldController!.text = value.toString();
-            });
-          },
-          inputFormatters: widget.inputFilter,
-          validator: widget.fieldValidationFunc,
-          cursorColor: Colors.black,
-          textAlignVertical: TextAlignVertical.center,
-          style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 14
-          ),
-          decoration: InputDecoration(
-              errorMaxLines: 2,
-              constraints: BoxConstraints(
-                maxWidth: widget.receivedWidth == null ? MediaQuery.of(context).size.width/4.2 : widget.receivedWidth!.toDouble(),
-              ),
-              errorStyle: const TextStyle(
-                  fontWeight: FontWeight.bold
-              ),
-              enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 1,
-                  )
-              ),
-              focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: 2,
-                  )
-              ),
-              contentPadding: const EdgeInsets.only(left: 10, bottom: 3)
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

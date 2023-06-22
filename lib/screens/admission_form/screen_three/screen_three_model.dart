@@ -1,8 +1,7 @@
-class ThirdPageDetails{
-int? year, rollNo, obtainedMarks, totalMarks, percentage;
-String? boardName, paperType;
+class ThirdPageModel{
+String? boardName, paperType, year, rollNo, obtainedMarks, totalMarks, percentage;
 
-ThirdPageDetails({
+ThirdPageModel({
   this.year,
   this.rollNo,
   this.boardName,
@@ -22,7 +21,7 @@ ThirdPageDetails({
     'paperType': paperType
   };
 
-  factory ThirdPageDetails.fromJson(Map<String, dynamic>json) => ThirdPageDetails(
+  factory ThirdPageModel.fromJson(Map<String, dynamic>json) => ThirdPageModel(
     year: json['year'],
     rollNo: json['rollNo'],
     boardName: json['boardName'],

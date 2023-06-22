@@ -33,9 +33,10 @@ class _AdmissionFormTextFieldBeforeTextState extends State<AdmissionFormTextFiel
         TextFormField(
           onChanged: (value){
             setState(() {
-              widget.fieldController!.text == value;
+              widget.fieldController!.text = value;
             });
           },
+          initialValue: widget.fieldController?.text == "" ? null : widget.fieldController?.text,
           inputFormatters: widget.inputFilter,
           textAlignVertical: TextAlignVertical.top,
           validator: widget.validation,
@@ -88,9 +89,10 @@ class _AdmissionFormTextFieldBeforeTextState extends State<AdmissionFormTextFiel
         TextFormField(
           onChanged: (value){
             setState(() {
-              widget.fieldController!.text == value;
+              widget.fieldController!.text = value;
             });
           },
+          initialValue: widget.fieldController?.text == "" ? null : widget.fieldController?.text,
           inputFormatters: widget.inputFilter,
           textAlignVertical: TextAlignVertical.center,
           validator: widget.validation,

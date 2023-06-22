@@ -1,10 +1,8 @@
-class FirstPageDetails {
-  int? eteaID;
-  int? meritListNo;
-  String? studentName, fatherName, departmentName, campusName, religion, nationality, fatherOccupation, mobileNo;
+class FirstPageModel {
+  String? eteaID, meritListNo, studentName, fatherName, departmentName, campusName, religion, nationality, fatherOccupation, mobileNo;
   String? cnic, maritalStatus, dateOfBirth;
 
-  FirstPageDetails({
+  FirstPageModel({
     this.eteaID,
     this.meritListNo,
     this.studentName,
@@ -36,7 +34,7 @@ class FirstPageDetails {
     'dateOfBirth': dateOfBirth
   };
 
-  factory FirstPageDetails.fromJson(Map<String, dynamic> json) => FirstPageDetails(
+  factory FirstPageModel.fromJson(Map<String, dynamic> json) => FirstPageModel(
     eteaID: json['eteaID'],
     meritListNo: json['meritListNo'],
     studentName: json['studentName'],
@@ -47,6 +45,8 @@ class FirstPageDetails {
     mobileNo: json['mobileNo'],
     cnic: json['cnic'],
     maritalStatus: json['maritalStatus'],
-    dateOfBirth: json['dateOfBirth']
+    dateOfBirth: json['dateOfBirth'],
+    religion: json['religion'],
+    nationality: json['nationality']
   );
 }

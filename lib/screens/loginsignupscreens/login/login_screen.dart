@@ -155,8 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Model.changeValue();
                                   await Model.validateAndSubmit();
                                   if (Model.proceed == true) {
-                                    Model.changeValue();
-//                    Navigator.pushNamedAndRemoveUntil(context, HomeScreen.homeScreen, (Route<dynamic> route) => false);
+                                    // Model.changeValue();
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BaseLayout()));
                                   }
                                 }
                                 else {
