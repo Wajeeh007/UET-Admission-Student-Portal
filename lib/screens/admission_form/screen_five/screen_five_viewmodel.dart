@@ -1,24 +1,39 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'dart:io';
 import 'package:pdf/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../screen_four/screen_four_model.dart';
+import '../screen_three/screen_three_model.dart';
+import '../screen_two/screen_two_model.dart';
 
 class ScreenFiveViewModel extends GetxController{
 
   final pdf = Document().obs;
   RxBool loader = false.obs;
   RxBool fileUploadedCheck = false.obs;
+  Map<String, String> downloadLinks = {};
+  Map<String, String> feeSlip = {};
+  final docsList = <FourthPageModel>[].obs;
+  late SharedPreferences prefs;
+  RxString userID = ''.obs;
+  final ImagePicker _picker = ImagePicker();
+  Rx<File?> imageFile = File('').obs;
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  // }
+  @override
+  void onInit() async{
+    prefs = await SharedPreferences.getInstance();
+    userID.value = (await prefs.getString('userID'))!;
+    super.onInit();
+  }
 
   Future<Uint8List> createPDF()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,9 +95,6 @@ class ScreenFiveViewModel extends GetxController{
     }
      return pdf.save();
   }
-
-  final ImagePicker _picker = ImagePicker();
-  Rx<File?> imageFile = File('').obs;
 
   pickFile(ImageSource src)async{
     final pickedFile = await _picker.pickImage(source: src);
@@ -231,5 +243,77 @@ class ScreenFiveViewModel extends GetxController{
         ]
     )
     );
+  }
+
+  submitForm()async{
+    var pageFourDetailsInString = await prefs.getStringList('4');
+
+    pageFourDetailsInString?.forEach((element) {
+      var docDetails = FourthPageModel.fromJson(jsonDecode(element));
+      docsList.add(docDetails);
+      docsList.refresh();
+    });
+    await getDoc();
+  }
+
+  getDoc()async{
+    try {
+      docsList.forEach((element) async {
+        final name = element.fieldName;
+        final ref = FirebaseStorage.instance.ref().child('user_docs').child(userID.toString()).child(name!);
+        final uploadTask = ref.putFile(File(element.file.toString()));
+        final snapshot = await uploadTask.whenComplete(() {});
+        final downloadURL = await snapshot.ref.getDownloadURL();
+        downloadLinks.addAll({
+          '${element.fieldName}': downloadURL
+        });
+        if(element == docsList.last){
+          await uploadDoc();
+        }
+      });
+    } catch (e) {
+      Get.back();
+      showToast(e.toString());
+    }
+  }
+
+  uploadDoc()async{
+    try {
+      final ref = FirebaseStorage.instance.ref().child('user_docs').child(userID.toString()).child('Fee Slip');
+      final uploadTask = ref.putFile(File('${imageFile.value?.path}'));
+      final snapshot = await uploadTask.whenComplete(() {});
+      final downloadURL = await snapshot.ref.getDownloadURL();
+      feeSlip.addAll({
+        'Fee Slip': downloadURL
+      });
+      await uploadData();
+    } catch (e) {
+      Get.back();
+      showToast(e.toString());
+    }
+  }
+
+  uploadData()async{
+    var pageOneDetailsInString = await prefs.getString('1');
+    var pageTwoDetailsInString = await prefs.getString('2');
+    var pageThreeDetailsInString = await prefs.getString('3');
+    final pageOneDetails = FirstPageModel.fromJson(jsonDecode(pageOneDetailsInString!));
+    final pageTwoDetails = SecondPageModel.fromJson(jsonDecode(pageTwoDetailsInString!));
+    final pageThreeDetails = ThirdPageModel.fromJson(jsonDecode(pageThreeDetailsInString!));
+
+    await FirebaseFirestore.instance.collection('user_data').doc(userID.toString()).update({
+      'firstPageDetails': pageOneDetails.toJson(),
+      'secondPageDetails': pageTwoDetails.toJson(),
+      'thirdPageDetails': pageThreeDetails.toJson(),
+      'fourthPageDetails': downloadLinks,
+      'fifthPageDetails': feeSlip,
+      'application_status': true,
+    });
+
+    await prefs.setBool('formSubmitted', true);
+
+    int count = 0;
+    Get.until((route) => count++ >= 5);
+
   }
 }

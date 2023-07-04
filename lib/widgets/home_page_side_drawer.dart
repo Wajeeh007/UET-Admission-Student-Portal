@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:online_admission/screens/homepage/menu_screens/merit_list.dart';
 import 'package:online_admission/screens/homepage/menu_screens/complain.dart';
 
@@ -53,14 +54,14 @@ class sideDrawer extends StatelessWidget {
               leading: const Icon(Icons.contact_support_outlined, color: Colors.white, size: 25,),
               title: const Text('Complaints', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               onTap: (){
-                Navigator.pushNamed(context, ComplainScreen.complainScreen);
+                Get.to(() => const ComplainScreen());
               },
             ),
             ListTile(
               leading: const Icon(Icons.history, color: Colors.white, size: 25,),
               title: const Text('Merit History', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               onTap: (){
-                Navigator.pushNamed(context, PreviousMeritLists.previousMeritList);
+                Get.to(() => const PreviousMeritLists());
               },
             ),
             ListTile(
@@ -75,7 +76,7 @@ class sideDrawer extends StatelessWidget {
               leading: const Icon(Icons.arrow_back, color: Colors.white, size: 25,),
               title: const Text('Back', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               onTap: (){
-                Navigator.pop(context);
+                // Navigator.pop(context);
               },
             )
           ],

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:online_admission/constants.dart';
 
 class PreviousMeritLists extends StatefulWidget {
-  static const previousMeritList = 'meritlist';
+
+  const PreviousMeritLists({super.key});
 
   @override
   State<PreviousMeritLists> createState() => _PreviousMeritListsState();

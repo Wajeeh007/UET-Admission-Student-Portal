@@ -237,7 +237,7 @@ class ScreenThreeView extends StatelessWidget {
                     width: MediaQuery.of(context).size.width,
                     height: 65,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 10.0, left: 15, right: 15),
+                      padding: const EdgeInsets.only(bottom: 10.0, left: 15, right: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

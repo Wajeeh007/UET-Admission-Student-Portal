@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/loginsignupscreens/login/login_screen.dart';
 import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen.dart';
@@ -41,7 +43,7 @@ class AuthChoose extends StatelessWidget {
                       ),
                       child: MaterialButton(
                           onPressed: (){
-                            Navigator.pushNamed(context, LoginScreen.loginscreen);
+                            Get.off(() => LoginScreen());
                           },
                         child: const Text('Log In', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),),
                       ),
@@ -55,7 +57,7 @@ class AuthChoose extends StatelessWidget {
                       ),
                       child: MaterialButton(
                           onPressed: (){
-                            Navigator.pushNamed(context, signUpScreen.signupscreen);
+                            Get.off(() => SignUpScreen());
                           },
                         child: const Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),),
                       ),

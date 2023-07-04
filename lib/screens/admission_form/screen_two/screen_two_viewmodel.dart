@@ -61,6 +61,5 @@ class ScreenTwoViewModel extends GetxController{
       totalMarks.text = details.totalMarks.toString();
       percentage.text = details.percentage.toString();
     }
-    print(presentAddress.text);
   }
 }

@@ -1,49 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:online_admission/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 
-class loginModel with ChangeNotifier{
+class LoginViewModel extends GetxController{
 
-  bool overlay = false;
-  bool proceed = false;
+  RxBool overlay = false.obs;
+  RxBool proceed = false.obs;
   final formKey = GlobalKey<FormState>();
-  String email = '';
-  String password = '';
-  bool passwdVisibility = false;
-  Icon passwordFieldIcon = const Icon(Icons.visibility_off_outlined, color: Colors.white,);
+  RxString email = ''.obs;
+  RxString password = ''.obs;
+  RxBool passwdVisibility = false.obs;
+  var passwordFieldIcon = const Icon(Icons.visibility_off_outlined, color: Colors.white,).obs;
 
   passwordVisibilityFunc(){
-    if(passwdVisibility == true){
-      passwdVisibility = false;
-      passwordFieldIcon = const Icon(Icons.visibility_outlined, color: Colors.white,);
-      notifyListeners();
+    if(passwdVisibility.value == true){
+      passwdVisibility.value = false;
+      passwordFieldIcon.value = const Icon(Icons.visibility_off_outlined, color: Colors.white,);
     }
     else{
-      passwdVisibility = true;
-      passwordFieldIcon = const Icon(Icons.visibility_off_outlined, color: Colors.white,);
-      notifyListeners();
+      passwdVisibility.value = true;
+      passwordFieldIcon.value = const Icon(Icons.visibility_outlined, color: Colors.white,);
     }
   }
 
-  changeValue(){
-    overlay = !overlay;
-    notifyListeners();
-  }
+  // changeValue(){
+  //   overlay.value = !overlay.value;
+  // }
 
   bool validateAndSave(){
     // Validate if entries in form are according to the validators
-    changeValue();
     final form = formKey.currentState;
     if (form!.validate()){
       form.save();
       return true;
     }
     else{
-      changeValue();
+      overlay.value = false;
       return false;
     }
   }
@@ -53,41 +50,41 @@ class loginModel with ChangeNotifier{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if(validateAndSave() == true) {
       try {
-        final newUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
-        if (newUser == UserCredential) {
+        final newUser = await _auth.signInWithEmailAndPassword(email: email.value, password: password.value);
+        if (newUser.runtimeType == UserCredential) {
           final userID = _auth.currentUser!.uid;
           final doc = await FirebaseFirestore.instance.collection('user_data').doc(userID);
           final docCheck = await doc.get();
           final userName = docCheck.get('name');
           await prefs.setString("userID", userID.toString());
-          await prefs.setString('email', email);
+          await prefs.setString('email', email.value);
           await prefs.setString('userName', userName.toString());
-          proceed = true;
-          notifyListeners();
+          // print(userID);
+          proceed.value = true;
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'wrong-password') {
-          changeValue();
+          overlay.value = false;
           showToast('Incorrect Password');
         }
         else if (e.code == 'user-not-found') {
-          changeValue();
+          overlay.value = false;
           showToast('User does not exist.\nSign Up');
         }
         else if (e.code == 'session-cookie-expired') {
-          changeValue();
+          overlay.value = false;
           showToast('Failed to Log In.\nTry again.');
         }
         else if (e.code == 'network-request-failed') {
-          changeValue();
+          overlay.value = false;
           showToast('Servers cannot be reached at the moment due to Network Error.\nCheck your Internet connection and try again',);
         }
         else {
-          changeValue();
+          overlay.value = false;
           showToast('Cannot log in.\nTry again in a while');
         }
       }
     }
-    changeValue();
+    overlay.value = false;
   }
 }

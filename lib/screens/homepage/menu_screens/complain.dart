@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:online_admission/constants.dart';
 
 class ComplainScreen extends StatefulWidget {
-  static const complainScreen = 'complainscreen';
+
+  const ComplainScreen({super.key});
 
   @override
   State<ComplainScreen> createState() => _ComplainScreenState();

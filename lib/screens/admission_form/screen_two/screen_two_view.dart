@@ -385,7 +385,7 @@ class ScreenTwoView extends StatelessWidget {
                                     )
                                 ),
                               Padding(
-                                padding: EdgeInsets.only(bottom: 10.0, top: 25),
+                                padding: const EdgeInsets.only(bottom: 10.0, top: 25),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -471,7 +471,7 @@ class ScreenTwoView extends StatelessWidget {
                                                 );
                                                 var jsonConverted = jsonEncode(details);
                                                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                await prefs.setString('2', jsonConverted);;
+                                                await prefs.setString('2', jsonConverted);
                                                 viewModel.loader.value = false;
                                                 Get.put(ScreenThreeViewModel());
                                                 Get.to(()=> ScreenThreeView());

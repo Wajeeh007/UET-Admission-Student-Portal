@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
@@ -28,16 +29,40 @@ class ScreenOneViewModel extends GetxController{
   var currentDateTime = DateTime.now();
   var currentYear;
   List<DropdownMenuItem> campusList = [];
+  RxBool formSubmittedCheck = false.obs;
+  RxString userID = ''.obs;
 
   @override
   void onInit() async{
     await getData();
     currentYear = DateTime(currentDateTime.year);
+    await getCheckFromFirebase();
     super.onInit();
+  }
+
+  getCheckFromFirebase()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final formCheckInStrg = await prefs.getBool('formSubmitted');
+    if(formCheckInStrg != null && formCheckInStrg != false){
+      formSubmittedCheck.value = true;
+    }
+    if(formSubmittedCheck.value == false){
+      var userData = await FirebaseFirestore.instance.collection('user_data').doc(userID.value);
+      final docCheck = await userData.get();
+      final formSubmitted = docCheck.get('application_status');
+      if(formSubmitted == false){
+        return;
+      }
+      else{
+        await prefs.remove('formSubmitted');
+        await prefs.setBool('formSubmitted', true);
+      }
+    }
   }
 
   getData()async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    userID.value = await prefs.getString('userID').toString();
     var firstPageDetailsInString = await prefs.getString('1');
     if (firstPageDetailsInString == null) {
       departmentList.insert(0, DropdownMenuItem(child: Text('Choose Department', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade800, fontSize: 12),), value: 'Choose Department',));
@@ -61,23 +86,23 @@ class ScreenOneViewModel extends GetxController{
         nationalityController.text = details.nationality.toString();
         maritalStatusSelect.value = details.maritalStatus.toString();
         nameController.text = details.studentName.toString();
+      departmentName.value == 'Mechanical' || departmentName.value == 'Computer Sciences' ||
+          departmentName.value == 'Industrial' ? campusList.addAll([
+        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+        const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+      ]) : departmentName.value == 'Electrical' ? campusList.addAll([
+        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+        const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+        const DropdownMenuItem(child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Kohat'),
+        const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+      ]) : departmentName.value == 'Civil' ? campusList.addAll([
+        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+        const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+        const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+      ]) : campusList.add(
+        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+      );
     }
-    departmentName.value == 'Mechanical' || departmentName.value == 'Computer Sciences' ||
-        departmentName.value == 'Industrial' ? campusList.addAll([
-      DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-      DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-    ]) : departmentName.value == 'Electrical' ? campusList.addAll([
-      DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-      DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-      DropdownMenuItem(child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Kohat'),
-      DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
-    ]) : departmentName.value == 'Civil' ? campusList.addAll([
-      DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-      DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-      DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
-    ]) : campusList.add(
-      DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-    );
   }
 
   List<DropdownMenuItem> departmentList = [

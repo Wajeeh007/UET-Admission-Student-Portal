@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:online_admission/screens/homepage/base_layout.dart';
 import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:online_admission/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:online_admission/functions/google_and_facebook_auth.dart';
 import 'login_screen_viewmodel.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const loginscreen = 'loginscreen';
+class LoginScreen extends StatelessWidget {
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
+  LoginScreen({super.key});
 
-class _LoginScreenState extends State<LoginScreen> {
+  final LoginViewModel viewModel = Get.put(LoginViewModel());
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => loginModel(),
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                physics: const ScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Consumer<loginModel>(
-                    builder: (context, Model, child) {
-                      return Column(
+        body: Obx(() => LoadingOverlay(
+            isLoading: viewModel.overlay.value,
+            color: Colors.black54,
+            progressIndicator: const CircularProgressIndicator(
+              strokeWidth: 6.5,
+              color: Colors.white,
+            ),
+            child: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    physics: const ScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
                         children: [
                           Center(child: Image.asset('assets/images/uni_logo.png', height: 150, width: 150,)),
                           const SizedBox(
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 16,
                         ),
                           Form(
-                        key: Model.formKey,
+                        key: viewModel.formKey,
                         child: Column(
                           children: [
                             const Padding(
@@ -54,9 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextFormField(
                               onChanged: (value) {
-                                setState(() {
-                                  Model.email = value;
-                                });
+                                  viewModel.email.value = value;
                               },
                               validator: (value) {
                                 if (value == null || value == '') {
@@ -92,9 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextFormField(
                             onChanged: (value) {
-                              setState(() {
-                                Model.password = value;
-                              });
+                              viewModel.password.value = value;
                             },
                             validator: (value) {
                               if (value == null || value == '') {
@@ -107,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               }
                             },
-                            obscureText: Model.passwdVisibility,
+                            obscureText: !viewModel.passwdVisibility.value,
                             decoration: kSignUpAndLogInScreenFieldDecoration.copyWith(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                               errorStyle: const TextStyle(
@@ -116,9 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               hintText: 'Enter your password',
                               suffixIcon: IconButton(
                                   onPressed: () {
-                                    Model.passwordVisibilityFunc();
+                                    viewModel.passwordVisibilityFunc();
                                   },
-                                  icon: Model.passwordFieldIcon
+                                  icon: viewModel.passwordFieldIcon.value
                               ),
                             ),
                           ),
@@ -129,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: const Text('Forgot Password ?', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, shadows: [
                                   Shadow(
                                       color: primaryColor,
-                                      offset: const Offset(0.0, -0.8)
+                                      offset: Offset(0.0, -0.8)
                                   ),
                                 ],
                                   color: Colors.transparent,
@@ -148,19 +145,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             child: MaterialButton(
                               onPressed: () async {
+                                viewModel.overlay.value = true;
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
                                 final connCheck = await checkConnection();
                                 if (connCheck == true) {
-                                  Model.changeValue();
-                                  await Model.validateAndSubmit();
-                                  if (Model.proceed == true) {
+                                  await viewModel.validateAndSubmit();
+                                  if (viewModel.proceed.value == true) {
                                     // Model.changeValue();
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BaseLayout()));
+                                    viewModel.overlay.value = false;
+                                    Get.off(() => BaseLayout());
                                   }
                                 }
                                 else {
-                                  Model.changeValue();
+                                  viewModel.overlay.value = false;
                                   showToast('No Internet Connection');
                                 }
                               },
@@ -192,14 +190,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 child: GestureDetector(
                                   onTap: ()async{
-                                    Model.changeValue();
+                                    viewModel.overlay.value = true;
                                     dynamic user = await GoogleLogIn().signInWithGoogle();
                                     if (user.runtimeType == UserCredential) {
-                                      Model.changeValue();
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BaseLayout()));
+                                      viewModel.overlay.value = false;
+                                      Get.off(() => BaseLayout());
                                     }
                                     else {
-                                      Model.changeValue();
+                                      viewModel.overlay.value = false;
                                     }
                                   },
                                 ),
@@ -244,8 +242,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               TextButton(
                                   onPressed: (){
-                                    Navigator.pushNamed(context, signUpScreen.signupscreen);
-                                  },
+                                    Get.off(() => SignUpScreen());
+                                    },
                                   child: const Text(
                                     'Sign Up',
                                     style: TextStyle(
@@ -266,13 +264,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           )
                         ],
-                      );
-                    }
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )),
-      ),
-    );
+                )
+            ),
+          ),
+        ),
+      );
   }
 }

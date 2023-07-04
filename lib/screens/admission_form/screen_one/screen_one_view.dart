@@ -10,11 +10,9 @@ import 'package:online_admission/screens/admission_form/screen_two/screen_two_vi
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../widgets/admission_form_date_picker.dart';
 import '../../../widgets/admission_form_textformfields.dart';
-import '../../homepage/base_layout.dart';
 
 class ScreenOneView extends StatelessWidget {
 
-  static const screenOneView = 'screenoneview';
   final ScreenOneViewModel viewModel = Get.put(ScreenOneViewModel());
 
   @override
@@ -167,19 +165,19 @@ class ScreenOneView extends StatelessWidget {
                                           viewModel.departmentNameCheck.value = false;
                                           value == 'Mechanical' || value == 'Computer Sciences' ||
                                               value == 'Industrial' ? viewModel.campusList.addAll([
-                                                DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-                                            DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+                                                const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                            const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
                                           ]) : viewModel.departmentName.value == 'Electrical' ? viewModel.campusList.addAll([
-                                            DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-                                            DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-                                            DropdownMenuItem(child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Kohat'),
-                                            DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+                                            const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                            const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+                                            const DropdownMenuItem(child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Kohat'),
+                                            const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
                                           ]) : viewModel.departmentName.value == 'Civil' ? viewModel.campusList.addAll([
-                                            DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-                                            DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-                                            DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+                                            const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                            const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+                                            const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
                                           ]) : viewModel.campusList.add(
-                                            DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+                                            const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
                                           );
                                       },
                                       value: viewModel.departmentName.value,
@@ -217,7 +215,7 @@ class ScreenOneView extends StatelessWidget {
                         const SizedBox(
                           height: 12,
                         ),
-                        viewModel.departmentName.value != '' ? Row(
+                        Obx(() => viewModel.departmentName.value != '' ? Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             SizedBox(
@@ -225,7 +223,7 @@ class ScreenOneView extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Obx(() => DropdownButtonFormField(
+                                  DropdownButtonFormField(
                                       isExpanded: false,
                                       decoration: const InputDecoration(
                                         contentPadding: EdgeInsets.only(left: 14, top: 10),
@@ -255,7 +253,6 @@ class ScreenOneView extends StatelessWidget {
                                       },
                                       value: viewModel.campus.value,
                                     ),
-                                  ),
                                   Obx(() => viewModel.campusNameCheck.value == true ? const Padding(
                                     padding: EdgeInsets.only(top: 4.0),
                                     child: Text(
@@ -284,6 +281,7 @@ class ScreenOneView extends StatelessWidget {
                             ),
                           ],
                         ) : Container(),
+                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -464,7 +462,7 @@ class ScreenOneView extends StatelessWidget {
                           ),
                           child: MaterialButton(
                               onPressed: (){
-                                Get.off(() => BaseLayout());
+                                pageIndex = 0;
                               },
                             child: const Text(
                               'Cancel',

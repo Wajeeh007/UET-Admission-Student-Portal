@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 
 const Color primaryColor = Color(0x99d0874c);
 
+bool? formSubmitted;
+int pageIndex = 0;
+
 showToast(String msg){
   Fluttertoast.showToast(
       msg: msg,

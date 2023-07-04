@@ -25,6 +25,7 @@ Future<void> main() async{
   }
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString('email');
+  formSubmitted = await prefs.getBool('formSubmitted');
   runApp(MyApp(email));
 }
 

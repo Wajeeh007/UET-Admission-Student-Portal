@@ -94,8 +94,8 @@ class _ConfirmEmailState extends State<ConfirmEmail> {
                     Container(
                       height: 38,
                       width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(18)),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
                         color: primaryColor
                       ),
                       child: MaterialButton(
