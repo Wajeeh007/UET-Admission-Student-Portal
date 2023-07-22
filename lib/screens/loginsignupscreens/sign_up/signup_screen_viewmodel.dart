@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io' as io;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:online_admission/constants.dart';
 
@@ -13,6 +15,7 @@ class SignUpViewModel extends GetxController {
   RxBool overlay = false.obs;
   RxBool proceed = false.obs;
   final formKey = GlobalKey<FormState>();
+  Rx<io.File?> imageFile = io.File('').obs;
   RxString email = ''.obs;
   RxString password = ''.obs;
   RxBool passwd1Visibility = true.obs;
@@ -68,14 +71,17 @@ class SignUpViewModel extends GetxController {
             await FirebaseFirestore.instance.collection('user_data').doc(newUser.user!.uid).set({
               'admin': false,
               'email': email.value,
-              'application_status': false
+              'application_status': false,
+              'user_id': newUser.user!.uid,
+              'documents_accepted': false,
             });
-            final userName = name.value;
             final userEmail = email.value;
-            final userID = newUser.user!.uid;
+            final userName = newUser.user?.displayName;
+            final userId = newUser.user?.uid;
             await prefs.setString('userName', userName.toString());
             await prefs.setString('email', userEmail.toString());
-            await prefs.setString('userID', userID);
+            await prefs.setString('userID', userId.toString());
+            userID = userId;
             overlay.value = false;
             proceed.value = true;
           }
@@ -103,4 +109,9 @@ class SignUpViewModel extends GetxController {
       }
     }
   }
+
+  pickImage(ImageSource src){
+
+  }
+
 }

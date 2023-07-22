@@ -6,7 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
 class ConfirmEmail extends StatefulWidget {
-  static const confirmEmail = 'confirmemail';
+
+  const ConfirmEmail({super.key});
 
   @override
   State<ConfirmEmail> createState() => _ConfirmEmailState();

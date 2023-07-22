@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:online_admission/screens/homepage/base_layout.dart';
+import 'package:online_admission/screens/base/base_layout.dart';
 import 'package:online_admission/screens/loginsignupscreens/login/login_screen.dart';
 import 'signup_screen_viewmodel.dart';
 import 'package:online_admission/constants.dart';
@@ -10,7 +12,9 @@ import 'package:online_admission/functions/google_and_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpScreen extends StatelessWidget {
-  
+
+  SignUpScreen({super.key});
+
   final SignUpViewModel viewModel = Get.put(SignUpViewModel());
   
   @override
@@ -32,7 +36,60 @@ class SignUpScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                               children: [
-                                Center(child: Image.asset('assets/images/uni_logo.png', height: 150, width: 150,)),
+                                Stack(
+                                  fit: StackFit.loose,
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0xffededed),
+                                      radius: 75,
+                                      child: Center(
+                                        child: viewModel.imageFile.value?.path == '' ? const Icon(Icons.person, color: Color(0xff707070), size: 80,) : Image.file(File(viewModel.imageFile.value!.path)),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 25,
+                                      bottom: 0,
+                                      child: Container(
+                                      width: 26,
+                                      height: 26,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xffd9ad89),
+                                        shape: BoxShape.circle,
+                                      ),
+                                        child: Center(child: GestureDetector(onTap: ()async{
+                                          showModalBottomSheet(context: context, builder: (context) {
+                                            return Center(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                                                    child: IconButton(
+                                                        onPressed: ()async {
+                                                          await viewModel.pickImage(ImageSource.camera);
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.camera_alt_outlined,
+                                                          size: 40.0, color: Colors.blue,)),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                                                    child: IconButton(
+                                                        onPressed: () async{
+                                                          await viewModel.pickImage(ImageSource.gallery);
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.folder_copy_outlined,
+                                                          size: 40.0, color: Colors.red,)),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          });
+                                        }, child: const Icon(Icons.camera_alt, color: Colors.white, size: 15,))),
+                                    ),
+                                    )
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 18,
                                 ),

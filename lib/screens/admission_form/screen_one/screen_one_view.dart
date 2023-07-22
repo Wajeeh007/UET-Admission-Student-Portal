@@ -161,24 +161,10 @@ class ScreenOneView extends StatelessWidget {
                                       ),
                                       items: viewModel.departmentList,
                                       onChanged: (value){
+                                        viewModel.campusFieldVisibility.value = false;
                                           viewModel.departmentName.value = value;
                                           viewModel.departmentNameCheck.value = false;
-                                          value == 'Mechanical' || value == 'Computer Sciences' ||
-                                              value == 'Industrial' ? viewModel.campusList.addAll([
-                                                const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-                                            const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-                                          ]) : viewModel.departmentName.value == 'Electrical' ? viewModel.campusList.addAll([
-                                            const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-                                            const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-                                            const DropdownMenuItem(child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Kohat'),
-                                            const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
-                                          ]) : viewModel.departmentName.value == 'Civil' ? viewModel.campusList.addAll([
-                                            const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-                                            const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-                                            const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
-                                          ]) : viewModel.campusList.add(
-                                            const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-                                          );
+                                          viewModel.changeList(value);
                                       },
                                       value: viewModel.departmentName.value,
                                     ),
@@ -215,72 +201,75 @@ class ScreenOneView extends StatelessWidget {
                         const SizedBox(
                           height: 12,
                         ),
-                        Obx(() => viewModel.departmentName.value != '' ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width/2.8,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  DropdownButtonFormField(
-                                      isExpanded: false,
-                                      decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.only(left: 14, top: 10),
-                                        hintStyle: TextStyle(
-                                          overflow: TextOverflow.fade,
-                                          color: Colors.grey,
+                        Obx(() => Visibility(
+                          visible: viewModel.campusFieldVisibility.value,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width/2.8,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      DropdownButtonFormField(
+                                          isExpanded: false,
+                                          decoration: const InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 14, top: 10),
+                                            hintStyle: TextStyle(
+                                              overflow: TextOverflow.fade,
+                                              color: Colors.grey,
+                                            ),
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                    width: 1
+                                                )
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                    width: 1
+                                                )
+                                            ),
+                                          ),
+                                          items: viewModel.campusList,
+                                          onChanged: (value){
+                                            viewModel.campus.value = value.toString();
+                                            viewModel.campusNameCheck.value = false;
+                                          },
+                                          value: viewModel.campus.value,
                                         ),
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black,
-                                                width: 1
-                                            )
+                                      Obx(() => viewModel.campusNameCheck.value == true ? const Padding(
+                                        padding: EdgeInsets.only(top: 4.0),
+                                        child: Text(
+                                          'Choose Campus',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold
+                                          ),
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black,
-                                                width: 1
-                                            )
-                                        ),
-                                      ),
-                                      items: viewModel.campusList,
-                                      onChanged: (value){
-                                        viewModel.campus.value = value.toString();
-                                        viewModel.campusNameCheck.value = false;
-                                      },
-                                      value: viewModel.campus.value,
-                                    ),
-                                  Obx(() => viewModel.campusNameCheck.value == true ? const Padding(
-                                    padding: EdgeInsets.only(top: 4.0),
-                                    child: Text(
-                                      'Choose Campus',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ) : Container()
-                                  )
-                                ],
-                              ),
+                                      ) : Container()
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text(
+                                  'Campus',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Text(
-                              'Campus',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16
-                              ),
-                            ),
-                          ],
-                        ) : Container(),
+                          ),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,

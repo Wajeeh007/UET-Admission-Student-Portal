@@ -5,7 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:online_admission/constants.dart';
-// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -38,7 +37,7 @@ class GoogleLogIn {
               await prefs.setString('userName', userName.toString());
               await prefs.setBool('isGoogleSignIn', true);
               await prefs.setBool('admin', false);
-              _firestore.terminate();
+              // _firestore.terminate();
               return userDetails;
             }
             on FirebaseException {
@@ -46,9 +45,7 @@ class GoogleLogIn {
             }
           }
           else{
-            GoogleSignIn _googleSignIn = GoogleSignIn();
-            await _googleSignIn.disconnect();
-            await firebaseAuth.signOut();
+            await googleSignOut();
             showToast('User does not exist.\nRegister User');
           }
         }
@@ -67,21 +64,15 @@ class GoogleLogIn {
   }
 
   googleSignOut() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? googleSignIn = await prefs.getBool('isGoogleSignIn');
-    if(googleSignIn == true) {
       try {
         final connCheck = await checkConnection();
         if (connCheck == true) {
           GoogleSignIn _googleSignIn = GoogleSignIn();
-          await _googleSignIn.disconnect();
+          await _googleSignIn.signOut();
           await firebaseAuth.signOut();
-          await prefs.clear();
-          return true;
         }
         else {
           showToast('No Internet Connection.\nCannot logout');
-          return false;
         }
       }
       catch (e) {
@@ -89,12 +80,7 @@ class GoogleLogIn {
         return false;
       }
     }
-    else{
-      await prefs.clear();
-      return true;
-    }
   }
-}
 
 // Sign up with Google ID
 class GoogleSignUp {
@@ -116,8 +102,10 @@ class GoogleSignUp {
             final userID = userdetails.uid;
             final userData = {
               "email": "$userEmail",
-              "name": "$userName",
-              "admin": false
+              'documents_accepted': false,
+              "admin": false,
+              "user_id": userID,
+              'application_status': false,
             };
             await _firestore.collection('user_data').doc(userID).set(userData);
             SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -126,7 +114,7 @@ class GoogleSignUp {
             await prefs.setString('userName', "$userName");
             await prefs.setBool('isGoogleSignIn', true);
             await prefs.setBool('admin', false);
-            _firestore.terminate();
+            // await _firestore.terminate();
             return userDetails;
           }
           else {

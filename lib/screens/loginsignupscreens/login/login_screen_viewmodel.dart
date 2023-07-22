@@ -52,14 +52,14 @@ class LoginViewModel extends GetxController{
       try {
         final newUser = await _auth.signInWithEmailAndPassword(email: email.value, password: password.value);
         if (newUser.runtimeType == UserCredential) {
-          final userID = _auth.currentUser!.uid;
-          final doc = await FirebaseFirestore.instance.collection('user_data').doc(userID);
+          final userId = _auth.currentUser!.uid;
+          final doc = await FirebaseFirestore.instance.collection('user_data').doc(userId);
           final docCheck = await doc.get();
           final userName = docCheck.get('name');
-          await prefs.setString("userID", userID.toString());
+          await prefs.setString("userID", userId.toString());
           await prefs.setString('email', email.value);
           await prefs.setString('userName', userName.toString());
-          // print(userID);
+          userID = _auth.currentUser!.uid;
           proceed.value = true;
         }
       } on FirebaseAuthException catch (e) {

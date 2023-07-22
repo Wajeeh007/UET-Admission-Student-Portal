@@ -5,6 +5,7 @@ import 'admission_form_textformfields.dart';
 class AdmissionFormField2Texts extends StatefulWidget {
 
   AdmissionFormField2Texts({
+    super.key,
     this.fieldController,
     this.fieldName,
     this.errorText,

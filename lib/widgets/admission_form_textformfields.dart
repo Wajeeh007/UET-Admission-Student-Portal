@@ -90,7 +90,7 @@ class _AdmissionFormFieldsState extends State<AdmissionFormFields> {
                         width: 2,
                       )
                   ),
-                  contentPadding: EdgeInsets.only(left: 10, bottom: 15)
+                  contentPadding: EdgeInsets.only(left: 10, bottom: 10)
               ),
             ),
           ) : TextFormField(

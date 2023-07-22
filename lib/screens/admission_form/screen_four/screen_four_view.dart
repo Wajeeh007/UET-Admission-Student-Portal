@@ -160,20 +160,7 @@ class ScreenFourView extends StatelessWidget {
                                 var json = jsonEncode(element);
                                 list.add(json);
                               });
-                              // var urlMap = {};
                               await prefs.setStringList('4', list);
-
-                              // final userId = await prefs.getString('userID');
-                              // viewModel.fieldList.forEach((element) async {
-                              //   File file = File(element.file.toString());
-                              //   final ref = await FirebaseStorage.instance.ref().child('user_docs').child(userId.toString()).child('${element.fieldName.toString()}');
-                              //   final uploadTask = ref.putFile(file);
-                              //   final snapshot = await uploadTask.whenComplete(() {});
-                              //   final urlDownload = await snapshot.ref.getDownloadURL();
-                              //   urlMap.addAll({
-                              //     '${element.fieldName}': urlDownload
-                              //   });
-                              // });
                               viewModel.loader.value = false;
                               Get.to(() => ScreenFiveView());
                             } else{
@@ -214,12 +201,8 @@ class ScreenFourView extends StatelessWidget {
           Column(
             children: [
               DottedBorder(
-                  dashPattern: [
-                    12, 5
-                  ],
-                  color: viewModel.fieldList[index!].showError
-                      ? Colors.red
-                      : Colors.grey.shade600,
+                  dashPattern: const [12, 5],
+                  color: viewModel.fieldList[index!].showError ? Colors.red : Colors.grey.shade600,
                   borderType: BorderType.RRect,
                   radius: const Radius.circular(10),
                   padding: const EdgeInsets.all(6),
@@ -238,7 +221,7 @@ class ScreenFourView extends StatelessWidget {
                                   await viewModel.pickFile(index);
                                 },
                                 child: Center(
-                                  child: viewModel.fieldList[index].showLoader == false ? Text(
+                                  child: viewModel.fieldList[index].showLoader == false ? const Text(
                                     'Upload Here',
                                     style: TextStyle(
                                         color: Colors.grey,
@@ -294,7 +277,8 @@ class ScreenFourView extends StatelessWidget {
                           fontWeight: FontWeight.bold
                       ),
                     ),
-                  ))
+                  )
+              )
             ],
           )
         ],

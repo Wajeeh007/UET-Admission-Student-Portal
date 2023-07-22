@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:online_admission/screens/homepage/base_layout_viewmodel.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:online_admission/constants.dart';
+import 'base_layout_viewmodel.dart';
 
 class BaseLayout extends StatelessWidget {
 
@@ -14,12 +15,21 @@ class BaseLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: PageView(
-        controller: viewModel.bottomNavBarController,
-        physics: NeverScrollableScrollPhysics(),
-        children: viewModel.pages,
+      body: Obx(() => LoadingOverlay(
+          isLoading: viewModel.overlay.value,
+          color: Colors.black45,
+          progressIndicator: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 6.5,
+          ),
+          child: PageView(
+            controller: viewModel.bottomNavBarController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: viewModel.pages,
+          ),
+        ),
       ),
-      bottomNavigationBar: pageIndex == 1 ? null : bottomNavBar(context),
+      bottomNavigationBar: pageIndex == 1 ? null : Obx(()=>Visibility(visible: viewModel.bottomNavBarVisibility.value, child: bottomNavBar(context))),
     );
   }
 
@@ -47,12 +57,12 @@ class BaseLayout extends StatelessWidget {
                               viewModel.changePage(0);
                             },
                             child: ImageIcon(
-                              AssetImage('assets/images/home_icon.png'),
+                              const AssetImage('assets/images/home_icon.png'),
                               size: 30,
                               color: viewModel.pageIndex.value == 0 ? Colors.white : Colors.grey.shade300,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text('Home', style: TextStyle(
@@ -70,15 +80,20 @@ class BaseLayout extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: (){
-                                viewModel.changePage(1);
+                                if(viewModel.formSubmitted.value == false){
+                                  viewModel.changePage(1);
+                                }
+                                else{
+                                  showToast('An application has already been submitted with this account');
+                                }
                               },
                               child: ImageIcon(
-                                AssetImage('assets/images/admission_form_icon.png'),
+                                const AssetImage('assets/images/admission_form_icon.png'),
                                 size: 30,
                                 color: viewModel.pageIndex.value == 1 ? Colors.white : Colors.grey.shade300,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Text('Admission Form', style: TextStyle(
@@ -98,12 +113,12 @@ class BaseLayout extends StatelessWidget {
                               viewModel.changePage(2);
                             },
                             child: ImageIcon(
-                              AssetImage('assets/images/status_icon.png'),
+                              const AssetImage('assets/images/status_icon.png'),
                               size: 30,
                               color: viewModel.pageIndex.value == 2 ? Colors.white : Colors.grey.shade300,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text('Status', style: TextStyle(
@@ -122,12 +137,12 @@ class BaseLayout extends StatelessWidget {
                               viewModel.changePage(3);
                             },
                             child: ImageIcon(
-                              AssetImage('assets/images/notification_icon.png'),
+                              const AssetImage('assets/images/notification_icon.png'),
                               size: 30,
                               color: viewModel.pageIndex.value == 3 ? Colors.white : Colors.grey.shade300,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text('Notification', style: TextStyle(

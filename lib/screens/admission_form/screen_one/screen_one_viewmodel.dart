@@ -28,9 +28,23 @@ class ScreenOneViewModel extends GetxController{
   RxBool loader = false.obs;
   var currentDateTime = DateTime.now();
   var currentYear;
-  List<DropdownMenuItem> campusList = [];
+  RxBool campusFieldVisibility = false.obs;
+  RxList<DropdownMenuItem> campusList = <DropdownMenuItem>[].obs;
   RxBool formSubmittedCheck = false.obs;
   RxString userID = ''.obs;
+
+  List<DropdownMenuItem> departmentList = [
+    const DropdownMenuItem(value: 'Mechanical',child: Text('Mechanical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),),
+    const DropdownMenuItem(value: 'Electrical',child: Text('Electrical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),),
+    const DropdownMenuItem(value: 'Civil',child: Text('Civil', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
+    const DropdownMenuItem(value: 'Industrial',child: Text('Industrial', textAlign: TextAlign.end, style: TextStyle(color: Colors.black)),),
+    const DropdownMenuItem(value: 'Mechatronics',child: Text('Mechatronics', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
+    const DropdownMenuItem(value: 'Agriculture',child: Text('Agriculture', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
+    const DropdownMenuItem(value: 'Mining',child: Text('Mining', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
+    const DropdownMenuItem(value: 'Chemical',child: Text('Chemical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
+    const DropdownMenuItem(value: 'Computer Sciences',child: Text('Computer Sciences', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
+    const DropdownMenuItem(value:'System Engineering',child: Text('System Engieering', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
+  ];
 
   @override
   void onInit() async{
@@ -47,7 +61,7 @@ class ScreenOneViewModel extends GetxController{
       formSubmittedCheck.value = true;
     }
     if(formSubmittedCheck.value == false){
-      var userData = await FirebaseFirestore.instance.collection('user_data').doc(userID.value);
+      var userData = FirebaseFirestore.instance.collection('user_data').doc(userID.value);
       final docCheck = await userData.get();
       final formSubmitted = docCheck.get('application_status');
       if(formSubmitted == false){
@@ -65,9 +79,9 @@ class ScreenOneViewModel extends GetxController{
     userID.value = await prefs.getString('userID').toString();
     var firstPageDetailsInString = await prefs.getString('1');
     if (firstPageDetailsInString == null) {
-      departmentList.insert(0, DropdownMenuItem(child: Text('Choose Department', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade800, fontSize: 12),), value: 'Choose Department',));
+      departmentList.insert(0, DropdownMenuItem(value: 'Choose Department',child: Text('Choose Department', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade800, fontSize: 12),),));
       departmentName.value = 'Choose Department';
-      campusList.add(DropdownMenuItem(child: Text('Choose Campus', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade800, fontSize: 12),), value: 'Choose Campus'));
+      campusList.add(DropdownMenuItem(value: 'Choose Campus', child: Text('Choose Campus', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade800, fontSize: 12),)));
       campus.refresh();
       campus.value = 'Choose Campus';
     }
@@ -77,6 +91,7 @@ class ScreenOneViewModel extends GetxController{
         meritNumberController.text = details.meritListNo.toString();
         departmentName.value = details.departmentName.toString();
         campus.value = details.campusName.toString();
+        campusFieldVisibility.value = true;
         fatherNameController.text = details.fatherName.toString();
         fatherOccupationController.text = details.fatherOccupation.toString();
         dateController.text = details.dateOfBirth.toString();
@@ -88,33 +103,56 @@ class ScreenOneViewModel extends GetxController{
         nameController.text = details.studentName.toString();
       departmentName.value == 'Mechanical' || departmentName.value == 'Computer Sciences' ||
           departmentName.value == 'Industrial' ? campusList.addAll([
-        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-        const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
+        const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Jalozai', child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
       ]) : departmentName.value == 'Electrical' ? campusList.addAll([
-        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-        const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-        const DropdownMenuItem(child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Kohat'),
-        const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+        const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Jalozai', child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Kohat', child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Bannu', child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
       ]) : departmentName.value == 'Civil' ? campusList.addAll([
-        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
-        const DropdownMenuItem(child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Jalozai'),
-        const DropdownMenuItem(child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Bannu'),
+        const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Jalozai', child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Bannu', child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
       ]) : campusList.add(
-        const DropdownMenuItem(child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Peshawar'),
+        const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
       );
     }
   }
 
-  List<DropdownMenuItem> departmentList = [
-    const DropdownMenuItem(child: Text('Mechanical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Mechanical',),
-    const DropdownMenuItem(child: Text('Electrical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),), value: 'Electrical',),
-    const DropdownMenuItem(child: Text('Civil', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Civil',),
-    const DropdownMenuItem(child: Text('Industrial', textAlign: TextAlign.end, style: TextStyle(color: Colors.black)), value: 'Industrial',),
-    const DropdownMenuItem(child: Text('Mechatronics', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Mechatronics',),
-    const DropdownMenuItem(child: Text('Agriculture', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Agriculture',),
-    const DropdownMenuItem(child: Text('Mining', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Mining',),
-    const DropdownMenuItem(child: Text('Chemical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Chemical',),
-    const DropdownMenuItem(child: Text('Computer Sciences', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value: 'Computer Sciences',),
-    const DropdownMenuItem(child: Text('System Engieering', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)), value:'System Engineering',),
-  ];
+  changeList(String departmentName){
+    campusList.clear();
+    campusList.add(DropdownMenuItem(value: 'Choose Campus',
+          child: Text('Choose Campus', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade800, fontSize: 12),),)
+    );
+    if(departmentName == 'Mechanical' || departmentName == 'Computer Sciences' || departmentName == 'Industrial'){
+      campusList.addAll([
+        const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Jalozai', child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+      ]);
+    } else if(departmentName == 'Electrical') {
+      campusList.addAll([
+        const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Jalozai', child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Kohat', child: Text('Kohat', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Bannu', child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+      ]);
+    } else if(departmentName == 'Civil'){
+      campusList.addAll([
+        const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Jalozai', child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+        const DropdownMenuItem(value: 'Bannu', child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
+      ]);
+    } else {
+      campusList.add(
+        const DropdownMenuItem(value: 'Peshawar', child: Text(
+          'Peshawar', textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black),
+        ),
+        ),
+      );
+    }
+      campusList.refresh();
+      campusFieldVisibility.value = true;
+    }
 }

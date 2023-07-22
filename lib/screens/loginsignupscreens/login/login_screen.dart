@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:online_admission/screens/homepage/base_layout.dart';
+import 'package:online_admission/screens/base/base_layout.dart';
 import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:online_admission/constants.dart';
@@ -144,6 +144,7 @@ class LoginScreen extends StatelessWidget {
                               color: primaryColor,
                             ),
                             child: MaterialButton(
+                              elevation: 10,
                               onPressed: () async {
                                 viewModel.overlay.value = true;
                                 FocusManager.instance.primaryFocus?.unfocus();

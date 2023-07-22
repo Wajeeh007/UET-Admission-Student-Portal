@@ -6,9 +6,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
+import 'package:online_admission/screens/base/base_layout_viewmodel.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:pdf/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screen_four/screen_four_model.dart';
@@ -21,12 +22,12 @@ class ScreenFiveViewModel extends GetxController{
   RxBool loader = false.obs;
   RxBool fileUploadedCheck = false.obs;
   Map<String, String> downloadLinks = {};
-  Map<String, String> feeSlip = {};
+  String feeSlip = '';
   final docsList = <FourthPageModel>[].obs;
   late SharedPreferences prefs;
   RxString userID = ''.obs;
   final ImagePicker _picker = ImagePicker();
-  Rx<File?> imageFile = File('').obs;
+  Rx<io.File?> imageFile = io.File('').obs;
 
   @override
   void onInit() async{
@@ -71,14 +72,12 @@ class ScreenFiveViewModel extends GetxController{
         );
       })
     );
+    final bytes = await pdf.save();
     var externalPath = await getExternalStorageDirectory();
     try {
       int? i = await prefs.getInt('i');
-      if(i == null){
-        i = 0;
-      }
-      File file = File('${externalPath?.path}/feeSlip$i.pdf');
-      await file.writeAsBytes(await pdf.save());
+      i ??= 0;
+      await io.File('/storage/emulated/0/Download/feeSlip$i.pdf').writeAsBytes(bytes, );
       i++;
       await prefs.setInt('i', i);
     } catch (e){
@@ -87,8 +86,8 @@ class ScreenFiveViewModel extends GetxController{
         i = 0;
       }
       if(e=='file already exists'){
-        File file = File('${externalPath?.path}/feeSlip$i');
-        await file.writeAsBytes(await pdf.save());
+        io.File('${externalPath?.path}/feeSlip$i.pdf').writeAsBytesSync(bytes);
+        // await file.writeAsBytes(bytes);
         i += 1;
         await prefs.setInt('i', i);
       }
@@ -99,7 +98,7 @@ class ScreenFiveViewModel extends GetxController{
   pickFile(ImageSource src)async{
     final pickedFile = await _picker.pickImage(source: src);
     if(pickedFile != null){
-      imageFile.value = File(pickedFile.path);
+      imageFile.value = io.File(pickedFile.path);
       fileUploadedCheck.value = false;
       Get.back();
     }
@@ -261,14 +260,14 @@ class ScreenFiveViewModel extends GetxController{
       docsList.forEach((element) async {
         final name = element.fieldName;
         final ref = FirebaseStorage.instance.ref().child('user_docs').child(userID.toString()).child(name!);
-        final uploadTask = ref.putFile(File(element.file.toString()));
+        final uploadTask = ref.putFile(io.File(element.file.toString()));
         final snapshot = await uploadTask.whenComplete(() {});
         final downloadURL = await snapshot.ref.getDownloadURL();
         downloadLinks.addAll({
           '${element.fieldName}': downloadURL
         });
         if(element == docsList.last){
-          await uploadDoc();
+          await uploadFeeSlip();
         }
       });
     } catch (e) {
@@ -277,15 +276,13 @@ class ScreenFiveViewModel extends GetxController{
     }
   }
 
-  uploadDoc()async{
+  uploadFeeSlip()async{
     try {
       final ref = FirebaseStorage.instance.ref().child('user_docs').child(userID.toString()).child('Fee Slip');
-      final uploadTask = ref.putFile(File('${imageFile.value?.path}'));
+      final uploadTask = ref.putFile(io.File('${imageFile.value?.path}'));
       final snapshot = await uploadTask.whenComplete(() {});
       final downloadURL = await snapshot.ref.getDownloadURL();
-      feeSlip.addAll({
-        'Fee Slip': downloadURL
-      });
+      feeSlip = downloadURL;
       await uploadData();
     } catch (e) {
       Get.back();
@@ -300,19 +297,26 @@ class ScreenFiveViewModel extends GetxController{
     final pageOneDetails = FirstPageModel.fromJson(jsonDecode(pageOneDetailsInString!));
     final pageTwoDetails = SecondPageModel.fromJson(jsonDecode(pageTwoDetailsInString!));
     final pageThreeDetails = ThirdPageModel.fromJson(jsonDecode(pageThreeDetailsInString!));
-
+    final name = pageOneDetails.studentName;
     await FirebaseFirestore.instance.collection('user_data').doc(userID.toString()).update({
+      'student_name': name,
       'firstPageDetails': pageOneDetails.toJson(),
       'secondPageDetails': pageTwoDetails.toJson(),
       'thirdPageDetails': pageThreeDetails.toJson(),
       'fourthPageDetails': downloadLinks,
-      'fifthPageDetails': feeSlip,
+      'fee_slip': feeSlip,
       'application_status': true,
+      'form_details_checked': false,
+      'form_details_accepted': false,
+      'fee_slip_checked': false,
+      'fee_slip_accepted': false,
     });
 
     await prefs.setBool('formSubmitted', true);
 
     int count = 0;
+    BaseLayoutViewModel baseLayoutViewModel = Get.find();
+    baseLayoutViewModel.changePage(0);
     Get.until((route) => count++ >= 5);
 
   }

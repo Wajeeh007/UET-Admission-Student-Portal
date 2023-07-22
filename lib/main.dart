@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:online_admission/screens/homepage/base_layout.dart';
+import 'package:online_admission/screens/base/base_layout.dart';
 import 'package:online_admission/screens/loginsignupscreens/choose_login_or_signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
@@ -26,6 +26,7 @@ Future<void> main() async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString('email');
   formSubmitted = await prefs.getBool('formSubmitted');
+  userID = prefs.getString('userID');
   runApp(MyApp(email));
 }
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: userEmail == null ? AuthChoose() : BaseLayout(),
+      home: userEmail == null ? const AuthChoose() : BaseLayout(),
     );
   }
 }

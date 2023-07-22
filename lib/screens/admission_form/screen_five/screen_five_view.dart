@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/admission_form/screen_five/screen_five_viewmodel.dart';
-import 'package:online_admission/screens/overlay_screen.dart';
+import 'package:online_admission/widgets/overlay_screen.dart';
 import 'package:printing/src/preview/pdf_preview.dart';
 import 'dart:io';
 
@@ -92,7 +91,7 @@ class ScreenFiveView extends StatelessWidget {
                     ),
                     child: MaterialButton(
                       onPressed: (){
-                        showToast('File downloaded');
+                        showToast('File downloaded at /storage/emulated/0/Download');
                       },
                       child: const Text(
                         'Download Fee Slip',
@@ -332,7 +331,7 @@ class ScreenFiveView extends StatelessWidget {
                                                   TextButton(
                                                       onPressed: () async {
                                                         Get.back();
-                                                        Get.to(() => OverlayScreen());
+                                                        Get.to(() => const OverlayScreen(), opaque: false);
                                                         await viewModel.submitForm();
                                                       },
                                                       child: const Text(

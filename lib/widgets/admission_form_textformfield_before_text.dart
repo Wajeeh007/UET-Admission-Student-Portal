@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 class AdmissionFormTextFieldBeforeText extends StatefulWidget {
 
   AdmissionFormTextFieldBeforeText({
+    super.key,
     this.fieldController,
     this.fieldText,
     this.receivedWidth,

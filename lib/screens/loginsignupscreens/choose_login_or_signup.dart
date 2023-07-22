@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/loginsignupscreens/login/login_screen.dart';
 import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen.dart';
 
 class AuthChoose extends StatelessWidget {
-  static const authChoose = 'authchoose';
+
+  const AuthChoose({super.key});
 
   @override
   Widget build(BuildContext context) {

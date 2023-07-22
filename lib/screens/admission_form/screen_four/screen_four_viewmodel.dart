@@ -56,7 +56,7 @@ class ScreenFourViewModel extends GetxController{
   }
 
   pickFile(int index)async{
-    final pickedFile = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['csv']);
+    final pickedFile = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
     if(pickedFile != null){
       final file = File(pickedFile.files.single.path.toString());
       fieldList[index].file = file.path;

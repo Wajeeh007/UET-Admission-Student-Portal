@@ -12,11 +12,11 @@ class PreviousMeritLists extends StatefulWidget {
 class _PreviousMeritListsState extends State<PreviousMeritLists> {
 
   List<DropdownMenuItem<String>> menuItems = [
-    const DropdownMenuItem(child: Text('Item 1'), value: 'Item 1',),
-    const DropdownMenuItem(child: Text('Item 2'), value: 'Item 2',),
-    const DropdownMenuItem(child: Text('Item 3'), value: 'Item 3',),
-    const DropdownMenuItem(child: Text('Item 4'), value: 'Item 4',),
-    const DropdownMenuItem(child: Text('Item 5'), value: 'Item 5',),
+    const DropdownMenuItem(value: 'Item 1',child: Text('Item 1'),),
+    const DropdownMenuItem(value: 'Item 2',child: Text('Item 2'),),
+    const DropdownMenuItem(value: 'Item 3',child: Text('Item 3'),),
+    const DropdownMenuItem(value: 'Item 4',child: Text('Item 4'),),
+    const DropdownMenuItem(value: 'Item 5',child: Text('Item 5'),),
   ];
 
   String? dropDownValue;
@@ -26,6 +26,7 @@ class _PreviousMeritListsState extends State<PreviousMeritLists> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(65),
           child: AppBar(
             backgroundColor: Colors.white,
             elevation: 0.0,
@@ -48,8 +49,7 @@ class _PreviousMeritListsState extends State<PreviousMeritLists> {
                 icon: const Icon(Icons.arrow_back_rounded, size: 36, color: Colors.black,),
               ),
             ),
-          ),
-          preferredSize: const Size.fromHeight(65)),
+          )),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 25),
         child: Column(
