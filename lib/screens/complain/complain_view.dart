@@ -23,18 +23,20 @@ class ComplainScreen extends StatelessWidget {
             child: Text(
               'Complain',
               style: TextStyle(
-                  color: Colors.black,
+                  color: Color(0xff435060),
                   fontSize: 24,
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold
               ),
             ),
           ),
           centerTitle: true,
           leading: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.only(top: 17.0),
             child: IconButton(
+              enableFeedback: false,
               onPressed: ()=>Get.back(),
-              icon: const Icon(Icons.arrow_back_rounded, size: 36, color: Colors.black,),
+              icon: const Icon(Icons.arrow_back_rounded, size: 36, color: Color(0xff435060),),
             ),
           ),
         ),
@@ -65,7 +67,8 @@ class ComplainScreen extends StatelessWidget {
                               child: Text(
                                 'Issue Title',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xff435060),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14
                                 ),
@@ -121,9 +124,10 @@ class ComplainScreen extends StatelessWidget {
                               child: Text(
                                 'Description',
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Color(0xff435060),
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14
+                                    fontSize: 14,
+                                  fontFamily: 'Poppins'
                                 ),
                               ),
                             ),
@@ -182,9 +186,10 @@ class ComplainScreen extends StatelessWidget {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xDDd0874c),
-                      borderRadius: const BorderRadius.all(Radius.circular(21)),
+                      borderRadius: const BorderRadius.all(Radius.circular(30)),
                       border: Border.all(
-                        width: 0,
+                        width: 1,
+                        color: const Color(0xDDd0874c),
                       ),
                     ),
                     child: MaterialButton(

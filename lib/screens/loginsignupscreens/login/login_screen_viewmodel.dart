@@ -1,5 +1,7 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:online_admission/constants.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class LoginViewModel extends GetxController{
 
   RxBool overlay = false.obs;
   RxBool proceed = false.obs;
+  RxList<Uint8List> documentBytes = <Uint8List>[].obs;
   final formKey = GlobalKey<FormState>();
   RxString email = ''.obs;
   RxString password = ''.obs;
@@ -27,10 +30,6 @@ class LoginViewModel extends GetxController{
       passwordFieldIcon.value = const Icon(Icons.visibility_outlined, color: Colors.white,);
     }
   }
-
-  // changeValue(){
-  //   overlay.value = !overlay.value;
-  // }
 
   bool validateAndSave(){
     // Validate if entries in form are according to the validators
@@ -56,6 +55,15 @@ class LoginViewModel extends GetxController{
           final doc = await FirebaseFirestore.instance.collection('user_data').doc(userId);
           final docCheck = await doc.get();
           final userName = docCheck.get('name');
+          final downloadLink = docCheck.get('display_image');
+          List<Uint8List> documentBytes = <Uint8List>[];
+          final pdfRef = FirebaseStorage.instanceFor(
+              bucket: 'admissionapp-9c884.appspot.com')
+              .refFromURL(downloadLink);
+          await pdfRef.getData(104857600).then((value) {
+            documentBytes.add(value!);
+          });
+          await prefs.setString('displayImage', documentBytes[0].toString());
           await prefs.setString("userID", userId.toString());
           await prefs.setString('email', email.value);
           await prefs.setString('userName', userName.toString());

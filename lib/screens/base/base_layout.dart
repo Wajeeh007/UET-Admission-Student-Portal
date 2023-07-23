@@ -66,6 +66,7 @@ class BaseLayout extends StatelessWidget {
                             height: 5,
                           ),
                           Text('Home', style: TextStyle(
+                            fontFamily: 'Poppins',
                               color: viewModel.pageIndex.value == 0 ? Colors
                                   .white : Colors.grey.shade300,
                               fontSize: 11,
@@ -97,6 +98,7 @@ class BaseLayout extends StatelessWidget {
                               height: 5,
                             ),
                             Text('Admission Form', style: TextStyle(
+                                fontFamily: 'Poppins',
                                 color: viewModel.pageIndex.value == 1 ? Colors
                                     .white : Colors.grey.shade300,
                                 fontSize: 11,
@@ -122,6 +124,7 @@ class BaseLayout extends StatelessWidget {
                             height: 5,
                           ),
                           Text('Status', style: TextStyle(
+                              fontFamily: 'Poppins',
                               color: viewModel.pageIndex.value == 2 ? Colors
                                   .white : Colors.grey.shade300,
                               fontSize: 11,
@@ -146,6 +149,7 @@ class BaseLayout extends StatelessWidget {
                             height: 5,
                           ),
                           Text('Notification', style: TextStyle(
+                              fontFamily: 'Poppins',
                               color: viewModel.pageIndex.value == 3 ? Colors
                                   .white : Colors.grey.shade300,
                               fontSize: 11,

@@ -44,7 +44,8 @@ class _AdmissionFormFieldsState extends State<AdmissionFormFields> {
           Text(
             widget.fieldName.toString(),
             style: const TextStyle(
-                color: Colors.black,
+              fontFamily: 'Poppins',
+                color: Color(0xff435060),
                 fontWeight: FontWeight.w700,
                 fontSize: 14
             ),

@@ -28,6 +28,7 @@ class ScreenFiveView extends StatelessWidget {
               'Admission Form',
               style: TextStyle(
                   color: Colors.black,
+                  fontFamily: 'Poppins',
                   fontSize: 23,
                   fontWeight: FontWeight.bold
               ),
@@ -42,7 +43,8 @@ class ScreenFiveView extends StatelessWidget {
                 style: TextStyle(
                     color: Colors.grey.shade400,
                     fontWeight: FontWeight.w600,
-                    fontSize: 15
+                    fontSize: 15,
+                  fontFamily: 'Poppins'
                 ),
               ),
             ),
@@ -96,6 +98,7 @@ class ScreenFiveView extends StatelessWidget {
                       child: const Text(
                         'Download Fee Slip',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16
@@ -115,6 +118,7 @@ class ScreenFiveView extends StatelessWidget {
                           child: Text(
                             'Must upload submitted fee slip',
                             style: TextStyle(
+                              fontFamily: 'Poppins',
                               color: Colors.grey.shade400,
                               fontSize: 12,
                               fontWeight: FontWeight.w600
@@ -177,6 +181,7 @@ class ScreenFiveView extends StatelessWidget {
                                   Text(
                                     'Upload your submitted fee slip photo here',
                                     style: TextStyle(
+                                      fontFamily: 'Poppins',
                                       color: Colors.grey.shade500,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12,
@@ -224,6 +229,7 @@ class ScreenFiveView extends StatelessWidget {
                           child: const Text(
                             'Upload Document to Submit Form',
                             style: TextStyle(
+                              fontFamily: 'Poppins',
                               color: Colors.red,
                               fontSize: 14,
                               fontWeight: FontWeight.bold
@@ -260,6 +266,7 @@ class ScreenFiveView extends StatelessWidget {
                             child: const Text(
                               'Go Back',
                               style: TextStyle(
+                                fontFamily: 'Poppins',
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -282,6 +289,7 @@ class ScreenFiveView extends StatelessWidget {
                               child: const Text(
                                 'Submit',
                                 style: TextStyle(
+                                  fontFamily: 'Poppins',
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -300,6 +308,7 @@ class ScreenFiveView extends StatelessWidget {
                                             title: const Text(
                                               'Submit Form',
                                               style: TextStyle(
+                                                fontFamily: 'Poppins',
                                                   color: Colors.black,
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold
@@ -308,9 +317,10 @@ class ScreenFiveView extends StatelessWidget {
                                             content: const Text(
                                               'Are you sure, you want to submit the form?\nThis action cannot be undone.',
                                               style: TextStyle(
+                                                fontFamily: 'Poppins',
                                                   color: Colors.black,
-                                                  // fontWeight: FontWeight.w600,
-                                                  fontSize: 15
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15,
                                               ),
                                             ),
                                             actions: [
@@ -324,7 +334,9 @@ class ScreenFiveView extends StatelessWidget {
                                                     child: const Text(
                                                         'No',
                                                       style: TextStyle(
-                                                        color: Colors.black
+                                                        fontFamily: 'Poppins',
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w700
                                                       ),
                                                     ),
                                                   ),
@@ -337,7 +349,9 @@ class ScreenFiveView extends StatelessWidget {
                                                       child: const Text(
                                                           'Yes',
                                                         style: TextStyle(
-                                                          color: Colors.black
+                                                          color: Colors.black,
+                                                          fontWeight: FontWeight.w700,
+                                                          fontFamily: 'Poppins'
                                                         ),
                                                       )
                                                   )

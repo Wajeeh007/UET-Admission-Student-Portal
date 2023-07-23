@@ -1,6 +1,9 @@
 // ignore_for_file: await_only_futures
 
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,6 +30,16 @@ class GoogleLogIn {
             final credential = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
             try {
               var userDetails = await FirebaseAuth.instance.signInWithCredential(credential);
+              final doc = await FirebaseFirestore.instance.collection('user_data').doc(userDetails.user!.uid);
+              final docCheck = await doc.get();
+              final downloadLink = docCheck.get('display_image');
+              List<Uint8List> documentBytes = <Uint8List>[];
+              final pdfRef = FirebaseStorage.instanceFor(
+                  bucket: 'admissionapp-9c884.appspot.com')
+                  .refFromURL(downloadLink);
+              await pdfRef.getData(104857600).then((value) {
+                documentBytes.add(value!);
+              });
               final userdetails = firebaseAuth.currentUser;
               final userID = userdetails!.uid;
               final userEmail = userdetails.email;
@@ -37,6 +50,7 @@ class GoogleLogIn {
               await prefs.setString('userName', userName.toString());
               await prefs.setBool('isGoogleSignIn', true);
               await prefs.setBool('admin', false);
+              await prefs.setString('displayImage', documentBytes[0].toString());
               // _firestore.terminate();
               return userDetails;
             }

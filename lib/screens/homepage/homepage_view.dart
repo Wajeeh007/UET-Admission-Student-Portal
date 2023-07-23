@@ -7,7 +7,7 @@ import '../../constants.dart';
 import '../../functions/google_and_facebook_auth.dart';
 import '../complain/complain_view.dart';
 import '../loginsignupscreens/choose_login_or_signup.dart';
-import '../menu_screens/merit_list.dart';
+import '../menu_screens/previous_merit_lists/previous_merit_list_view.dart';
 
 class HomePage extends StatefulWidget{
 
@@ -44,9 +44,11 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 45,
+                    Obx(() => CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage: viewModel.fileBytes.value.isEmpty ? null : MemoryImage(viewModel.fileBytes.value),
+                        radius: 45,
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                       leading: const Icon(Icons.history, color: Colors.white, size: 27,),
                       title: const Text('Merit History', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14, fontFamily: 'Poppins')),
                       onTap: (){
-                        Get.to(() => const PreviousMeritLists());
+                        Get.to(() => PreviousMeritLists());
                       },
                     ),
                     ListTile(
@@ -162,7 +164,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         Obx(() => Container(
-                            height: MediaQuery.of(context).size.height/3.3,
+                            height: MediaQuery.of(context).size.height/3.6,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                                 color: primaryColor,
@@ -195,10 +197,12 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                                             },
                                             child: Image.asset('assets/images/menu_icon.png', width: 23, height: 23,),
                                         ),
-                                        const CircleAvatar(
-                                          radius: 26,
-                                          backgroundColor: Colors.transparent,
-                                          child: Icon(Icons.account_circle_outlined, size: 35,color: Colors.white,),
+                                        Obx(() => CircleAvatar(
+                                            radius: 23,
+                                            backgroundImage: viewModel.fileBytes.value.isEmpty ? null : MemoryImage(viewModel.fileBytes.value),
+                                            backgroundColor: Colors.transparent,
+                                            child: viewModel.fileBytes.value.isEmpty ? Icon(Icons.account_circle_outlined, size: 35,color: Colors.white,) : null,
+                                          ),
                                         )
                                       ],
                                     ),
@@ -248,11 +252,11 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                         Container(
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
+                          height: MediaQuery.of(context).size.height/1.62,
                           child: Obx(() => Visibility(
                               visible: viewModel.meritListVisibilty.value,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 25),
+                                padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
                                 child: Container(
                                   height: MediaQuery.of(context).size.height/1.97,
                                   width: MediaQuery.of(context).size.width/1.1,
@@ -261,7 +265,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                                     color: Colors.white,
                                     border: Border.all(
                                       color: const Color(0xffd1d3da),
-                                      width: 0.8,
+                                      width: 1.5,
                                     ),
                                     borderRadius: const BorderRadius.all(Radius.circular(12))
                                   ),///
@@ -329,35 +333,35 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                                         ),
                                       ),
                                       Positioned(
-                                        left: 60,
+                                        left: MediaQuery.of(context).size.width/6,
                                         child: Container(
                                           color: const Color(0xffd1d3da),
                                           width: 1.5,
-                                          height: MediaQuery.of(context).size.height/1.97,
+                                          height: MediaQuery.of(context).size.height,
                                         ),
                                       ),
                                       Positioned(
-                                        left: 128,
+                                        left: MediaQuery.of(context).size.width/2.8125,
                                         child: Container(
                                           color: const Color(0xffd1d3da),
                                           width: 1.5,
-                                          height: MediaQuery.of(context).size.height/1.97,
+                                          height: MediaQuery.of(context).size.height,
                                         ),
                                       ),
                                       Positioned(
-                                        right: 135,
+                                        right: MediaQuery.of(context).size.width/2.66,
                                         child: Container(
                                           color: const Color(0xffd1d3da),
                                           width: 1.5,
-                                          height: MediaQuery.of(context).size.height/1.97,
+                                          height: MediaQuery.of(context).size.height,
                                         ),
                                       ),
                                       Positioned(
-                                        right: 63,
+                                        right: MediaQuery.of(context).size.width/5.71,
                                         child: Container(
                                           color: const Color(0xffd1d3da),
                                           width: 1.5,
-                                          height: MediaQuery.of(context).size.height/1.97,
+                                          height: MediaQuery.of(context).size.height,
                                         ),
                                       )
                                     ],

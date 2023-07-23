@@ -28,8 +28,9 @@ class ScreenOneView extends StatelessWidget {
             child: Text(
               'Admission Form',
               style: TextStyle(
-                  color: Colors.black,
+                  color: Color(0xff435060),
                   fontSize: 23,
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold
               ),
             ),
@@ -51,6 +52,7 @@ class ScreenOneView extends StatelessWidget {
                       child: Text(
                         '1/5',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           color: Colors.grey.shade400,
                           fontWeight: FontWeight.w600,
                           fontSize: 15
@@ -111,7 +113,8 @@ class ScreenOneView extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
                           child: Text('Application form for enrollment to first semester',
                             style: TextStyle(
-                                color: Colors.grey.shade400,
+                              fontFamily: 'Poppins',
+                                color: Color(0xff435060),
                                 fontWeight: FontWeight.w700,
                                 fontSize: 15
                             ),),
@@ -123,8 +126,9 @@ class ScreenOneView extends StatelessWidget {
                             const Text(
                               'B.Sc',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Color(0xff435060),
                                 fontSize: 14,
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w700
                               ),
                             ),
@@ -175,6 +179,7 @@ class ScreenOneView extends StatelessWidget {
                                       'Choose Department',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
+                                        fontFamily: 'Poppins',
                                         color: Colors.red,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14

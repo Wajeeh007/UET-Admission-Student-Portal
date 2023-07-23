@@ -42,8 +42,9 @@ class SignUpScreen extends StatelessWidget {
                                     CircleAvatar(
                                       backgroundColor: const Color(0xffededed),
                                       radius: 75,
+                                      backgroundImage: viewModel.imageFile.value?.path == '' ? null : FileImage(File(viewModel.imageFile.value!.path)),
                                       child: Center(
-                                        child: viewModel.imageFile.value?.path == '' ? const Icon(Icons.person, color: Color(0xff707070), size: 80,) : Image.file(File(viewModel.imageFile.value!.path)),
+                                        child: viewModel.imageFile.value?.path == '' ? const Icon(Icons.person, color: Color(0xff707070), size: 80,) : null,
                                       ),
                                     ),
                                     Positioned(
@@ -90,10 +91,36 @@ class SignUpScreen extends StatelessWidget {
                                     )
                                   ],
                                 ),
+                                SizedBox(
+                                  height: 6,
+                                ),
+                                Obx(() => Visibility(
+                                    visible: viewModel.imageUploadError.value,
+                                    child: Text(
+                                      'Upload Image to Sign Up',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13
+                                      ),
+                                  ),
+                                  ),
+                                ),
                                 const SizedBox(
                                   height: 18,
                                 ),
-                                Center(child: Text('Welcome, please register yourself to access your UET merit list and admission application', style: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w600, fontSize: 14.5),)),
+                                Center(
+                                    child: Text(
+                                      'Welcome, please register yourself to access your UET merit list and admission application',
+                                      style: TextStyle(
+                                          color: Color(0xff444443),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14.5,
+                                        fontFamily: 'Poppins'
+                                      ),
+                                    ),
+                                ),
                                 const SizedBox(
                                   height: 18,
                                 ),
@@ -103,7 +130,18 @@ class SignUpScreen extends StatelessWidget {
                                     children: [
                                       const Padding(
                                         padding: EdgeInsets.only(left: 15.0),
-                                        child: Align(alignment: Alignment.centerLeft, child: Text('Email', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
+                                        child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              'Email',
+                                              style: TextStyle(
+                                                  color: Color(0xff444443),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w700,
+                                                fontFamily: 'Poppins'
+                                              ),
+                                            ),
+                                        ),
                                       ),
                                       const SizedBox(
                                         height: 7,
@@ -139,7 +177,18 @@ class SignUpScreen extends StatelessWidget {
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.only(left: 15.0),
-                                  child: Align(alignment: Alignment.centerLeft, child: Text('Create Password', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
+                                  child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Password',
+                                        style: TextStyle(
+                                            color: Color(0xff444443),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Poppins'
+                                        ),
+                                      ),
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 7,
@@ -179,7 +228,18 @@ class SignUpScreen extends StatelessWidget {
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.only(left: 15.0),
-                                  child: Align(alignment: Alignment.centerLeft, child: Text('Confirm Password', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
+                                  child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Confirm Password',
+                                        style: TextStyle(
+                                            color: Color(0xff444443),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Poppins'
+                                        ),
+                                      ),
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 7,
@@ -224,33 +284,48 @@ class SignUpScreen extends StatelessWidget {
                                     onPressed: () async {
                                       FocusManager.instance.primaryFocus?.unfocus();
                                       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-                                      final connCheck = await checkConnection();
-                                      if (connCheck == true) {
-                                        viewModel.overlay.value = true;
-                                        await viewModel.validateAndSubmit();
-                                        if (viewModel.proceed.value == true) {
+                                      if(viewModel.imageFile.value?.path == ''){
+                                        viewModel.imageUploadError.value = true;
+                                      }else {
+                                        final connCheck = await checkConnection();
+                                        if (connCheck == true) {
+                                          viewModel.overlay.value = true;
+                                          await viewModel.validateAndSubmit();
+                                          if (viewModel.proceed.value == true) {
+                                            viewModel.overlay.value = false;
+                                            Get.off(() => BaseLayout());
+                                          }
+                                        }
+                                        else {
                                           viewModel.overlay.value = false;
-                                          Get.off(() => BaseLayout());
+                                          showToast('No Internet Connection');
                                         }
                                       }
-                                      else {
-                                        viewModel.overlay.value = false;
-                                        showToast('No Internet Connection');
-                                      }
                                     },
-                                    child: const Text('Sign Up',
+                                    child: const Text(
+                                        'Sign Up',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 16.0
-                                        )),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0,
+                                          fontFamily: 'Poppins'
+                                        ),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(
                                   height: 25,
                                 ),
-                                const Text('Or', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 16),),
+                                const Text(
+                                  'Or',
+                                  style: TextStyle(
+                                      color: Color(0xff444443),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                  fontFamily: 'Poppins',
+                                  ),
+                                ),
                                 const SizedBox(
                                   height: 17,
                                 ),
@@ -313,7 +388,10 @@ class SignUpScreen extends StatelessWidget {
                                     const Text(
                                       'Already have an account?',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Color(0xff444443),
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13
                                       ),
                                     ),
                                     TextButton(
@@ -323,6 +401,7 @@ class SignUpScreen extends StatelessWidget {
                                         child: const Text(
                                           'Log In',
                                           style: TextStyle(
+                                            fontFamily: 'Poppins',
                                             fontWeight: FontWeight.bold,
                                             shadows: [
                                               Shadow(

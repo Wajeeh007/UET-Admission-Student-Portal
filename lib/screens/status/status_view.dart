@@ -26,7 +26,8 @@ class StatusView extends StatelessWidget {
               child: Text(
                 'Status',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Color(0xff435060),
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
@@ -50,6 +51,7 @@ class StatusView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
@@ -59,14 +61,15 @@ class StatusView extends StatelessWidget {
                             color: Colors.white,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: viewModel.fillStop.value < 0.3 ? const Color(0xffd0874c) : const Color(0xff03c55e),
+                              color: viewModel.fillStop.value == 0.03 ? Color(0xff707070) : viewModel.fillStop.value == 0.3 ? const Color(0xffd0874c) : const Color(0xff03c55e),
                               width: 0.8
                             ),
-                            image: viewModel.fillStop.value > 0.03 ? null : const DecorationImage(
+                            image: viewModel.fillStop.value == 0.03 ? const DecorationImage(
+                                image: AssetImage('assets/images/document_icon_grey.png'),) : viewModel.fillStop.value == 0.3 ? const DecorationImage(
                               image: AssetImage('assets/images/document_icon.png'),
-                            ),
+                            ) : null,
                           ),
-                          child: viewModel.fillStop.value < 0.3 ? null : const CircleAvatar(
+                          child: viewModel.fillStop.value < 0.4 ? null : const CircleAvatar(
                             radius: 15,
                             backgroundColor: Color(0xff03c55e),
                             child: Center(
@@ -82,7 +85,7 @@ class StatusView extends StatelessWidget {
                         Container(
                           height: 1,
                           width: MediaQuery.of(context).size.width/5.5,
-                          color: viewModel.fillStop.value == 0.3 || viewModel.fillStop.value > 0.3 ? const Color(0xff03c55e) : const Color(0xffd0874c),
+                          color: viewModel.fillStop.value == 0.03 ? Color(0xffc6c6c6) : viewModel.fillStop.value == 0.3 ? const Color(0xffd0487c) : const Color(0xff03c55e),
                         ),
                         const SizedBox(width: 11,),
                         Container(
@@ -92,13 +95,12 @@ class StatusView extends StatelessWidget {
                               color: Colors.white,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: viewModel.fillStop.value == 0.03 ? Colors.grey : viewModel.fillStop.value == 0.3 ? const Color(0xffd0874c) : const Color(0xff03c55e),
+                                  color: viewModel.fillStop.value <= 0.3  ? Colors.grey : viewModel.fillStop.value == 0.6 ? const Color(0xffd0874c) : const Color(0xff03c55e),
                                   width: 0.8
                               ),
                               image: DecorationImage(
-                                image: viewModel.fillStop.value > 0.03
-                                    && viewModel.fillStop.value <= 0.3 ? const AssetImage('assets/images/document_icon.png') :
-                                    const AssetImage('assets/images/document_icon_grey.png'),
+                                image: viewModel.fillStop.value <= 0.3 ? const AssetImage('assets/images/document_icon_grey.png') :
+                                    const AssetImage('assets/images/document_icon.png'),
                               )
                           ),
                           child: viewModel.fillStop.value < 0.6 ? null : const CircleAvatar(
@@ -113,33 +115,34 @@ class StatusView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 11,),
-                        Container(
-                          height: 1,
-                          width: MediaQuery.of(context).size.width/5.5,
-                          color: viewModel.fillStop.value > 0.3 ? const Color(0xff03c55e) : Colors.grey,
-                        ),
-                        const SizedBox(width: 11,),
-                        Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: viewModel.fillStop.value < 0.6 ? Colors.grey : const Color(0xffd0874c),
-                                  width: 0.8
-                              ),
-                              image: DecorationImage(
-                                image: viewModel.fillStop.value < 0.6 ? const AssetImage('assets/images/interview_call_grey.png') : const AssetImage('assets/images/interview_call_colored.png')
-                              )
-                          ),
-                        ),
+                        // const SizedBox(width: 11,),
+                        // Container(
+                        //   height: 1,
+                        //   width: MediaQuery.of(context).size.width/5.5,
+                        //   color: viewModel.fillStop.value > 0.3 ? const Color(0xff03c55e) : Colors.grey,
+                        // ),
+                        // const SizedBox(width: 11,),
+                        // Container(
+                        //   width: 30,
+                        //   height: 30,
+                        //   decoration: BoxDecoration(
+                        //       color: Colors.white,
+                        //       shape: BoxShape.circle,
+                        //       border: Border.all(
+                        //           color: viewModel.fillStop.value < 0.6 ? Colors.grey : const Color(0xffd0874c),
+                        //           width: 0.8
+                        //       ),
+                        //       image: DecorationImage(
+                        //         image: viewModel.fillStop.value < 0.6 ? const AssetImage('assets/images/interview_call_grey.png') : const AssetImage('assets/images/interview_call_colored.png')
+                        //       )
+                        //   ),
+                        // ),
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Row(
+                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,21 +170,21 @@ class StatusView extends StatelessWidget {
                               Container(
                                 height: 20,
                                 decoration: BoxDecoration(
-                                    color: viewModel.fillStop.value > 0.03 ? const Color(0xff03c55e) : const Color(0xFFFDF1D3),
+                                    color: viewModel.fillStop.value == 0.03 ? Colors.white : viewModel.fillStop.value > 0.3 ? const Color(0xff03c55e) : const Color(0xFFFDF1D3),
                                     borderRadius: const BorderRadius.all(Radius.circular(15)),
                                     border: Border.all(
-                                      width: 0,
-                                      color: const Color(0xFFFDF1D3),
+                                      width: viewModel.formSubmitted.value ? 0 : 1.5,
+                                      color: viewModel.formSubmitted.value ? const Color(0xFFFDF1D3) : const Color(0xff444443)
                                     )
                                 ),
                                 child: Center(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                     child: Text(
-                                      viewModel.fillStop.value > 0.03 ? 'Completed' : 'Under Review',
+                                      viewModel.formSubmitted.value == false ? 'Pending' : viewModel.fillStop.value > 0.3 ? 'Completed' : 'Under Review',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          color: viewModel.fillStop.value > 0.03 ? Colors.white : Colors.grey.shade600,
+                                          color: viewModel.fillStop.value == 0.6 ? Colors.white : Colors.grey.shade600,
                                           fontSize: 11
                                       ),
                                     ),
@@ -206,10 +209,10 @@ class StatusView extends StatelessWidget {
                               const SizedBox(
                                 height: 3,
                               ),
-                              const Text(
+                              Text(
                                 'Fee Slip',
                                 style: TextStyle(
-                                    color: Colors.grey,
+                                    color: viewModel.fillStop.value > 0.3 ? const Color(0xff435060) : Colors.grey,
                                     fontSize: 11.5
                                 ),
                               ),
@@ -219,73 +222,21 @@ class StatusView extends StatelessWidget {
                               Container(
                                 height: 20,
                                 decoration: BoxDecoration(
-                                  color: viewModel.fillStop.value == 0.03 ? Colors.white : viewModel.fillStop.value == 0.3 ? const Color(0xFFFDF1D3) : null,
+                                  color: viewModel.fillStop.value < 0.6 ? Colors.white : viewModel.fillStop.value == 0.6 ? const Color(0xFFFDF1D3) : viewModel.fillStop.value > 0.6 ? const Color(0xff03c55e) : null,
                                     borderRadius: const BorderRadius.all(Radius.circular(15)),
                                     border: Border.all(
-                                      width: viewModel.fillStop.value == 0.03 ? 1.5 : 0,
-                                      color: viewModel.fillStop.value == 0.03 ? const Color(0xff444443) : viewModel.fillStop.value == 0.3 ? const Color(0xFFFDF1D3) : const Color(0xff03c55e),
-                                    )
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(
-                                      viewModel.fillStop.value < 0.3 ? 'Pending' : 'In Progress',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: 11
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            width: viewModel.fillStop.value == 0.3 ? MediaQuery.of(context).size.width/8.4 : MediaQuery.of(context).size.width/6.1,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Step 3',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              const Text(
-                                'Interview Call',
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 11.5
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Container(
-                                height: 20,
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(15)),
-                                    border: Border.all(
-                                      width: viewModel.fillStop.value < 0.6 ? 1.5 : 0,
+                                      width: viewModel.fillStop.value < 0.6 ? 0 : 1.5,
                                       color: viewModel.fillStop.value < 0.6 ? const Color(0xff444443) : viewModel.fillStop.value == 0.6 ? const Color(0xFFFDF1D3) : const Color(0xff03c55e),
                                     )
                                 ),
-                                // width: 85,
                                 child: Center(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                     child: Text(
-                                      viewModel.fillStop.value == 0.6 ? 'In Progress' : 'Pending',
+                                      viewModel.fillStop.value < 0.6 ? 'Pending' : viewModel.fillStop.value > 0.6 ? 'Completed' : 'In Progress',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          color: Colors.grey.shade600,
+                                          color: viewModel.fillStop.value == 0.6 ? Colors.white : Colors.grey.shade600,
                                           fontSize: 11
                                       ),
                                     ),
@@ -293,7 +244,60 @@ class StatusView extends StatelessWidget {
                                 ),
                               )
                             ],
-                          )
+                          ),
+                          // SizedBox(
+                          //   width: viewModel.fillStop.value == 0.3 ? MediaQuery.of(context).size.width/8.4 : viewModel.fillStop.value == 0.6 ? MediaQuery.of(context).size.width/7.5 : MediaQuery.of(context).size.width/6.1,
+                          // ),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     const Text(
+                          //       'Step 3',
+                          //       style: TextStyle(
+                          //         color: Colors.grey,
+                          //         fontSize: 10,
+                          //       ),
+                          //     ),
+                          //     const SizedBox(
+                          //       height: 3,
+                          //     ),
+                          //     const Text(
+                          //       'Interview Call',
+                          //       style: TextStyle(
+                          //           color: Colors.grey,
+                          //           fontSize: 11.5
+                          //       ),
+                          //     ),
+                          //     const SizedBox(
+                          //       height: 3,
+                          //     ),
+                          //     Container(
+                          //       height: 20,
+                          //       decoration: BoxDecoration(
+                          //           borderRadius: const BorderRadius.all(Radius.circular(15)),
+                          //           color: viewModel.fillStop.value < 0.6 ? Colors.white : const Color(0xFFFDF1D3),
+                          //           border: Border.all(
+                          //             width: viewModel.fillStop.value < 0.6 ? 1.5 : 0,
+                          //             color: viewModel.fillStop.value < 0.6 ? const Color(0xff444443) : viewModel.fillStop.value == 0.6 ? const Color(0xFFFDF1D3) : const Color(0xff03c55e),
+                          //           )
+                          //       ),
+                          //       // width: 85,
+                          //       child: Center(
+                          //         child: Padding(
+                          //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          //           child: Text(
+                          //             viewModel.fillStop.value == 0.6 ? 'In Progress' : 'Pending',
+                          //             textAlign: TextAlign.center,
+                          //             style: TextStyle(
+                          //                 color: Colors.grey.shade600,
+                          //                 fontSize: 11
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     )
+                          //   ],
+                          // )
                         ],
                       ),
                     ),
@@ -311,10 +315,15 @@ class StatusView extends StatelessWidget {
                                   color: const Color(0xffd0874c),
                                   width: 0.8
                               ),
-                              image: DecorationImage(
-                                image: viewModel.fillStop.value == 0.6 ? const AssetImage('assets/images/interview_call_colored.png') : const AssetImage('assets/images/document_icon.png'),
-                              )
+                              image: viewModel.fillStop.value <= 0.6 ? const DecorationImage(
+                                image: AssetImage('assets/images/document_icon.png'),
+                              ) : null,
                           ),
+                          child: viewModel.fillStop.value == 0.9 ? CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Color(0xff03c55e),
+                            child: Icon(Icons.check, color: Colors.white, size: 15,),
+                          ) : null,
                         ),
                       ),
                     ),
@@ -322,10 +331,12 @@ class StatusView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Obx(() => Text(
-                            viewModel.fillStop.value == 0.03 ? 'Step 1' : viewModel.fillStop.value == 0.3 ? 'Step 2' : 'Step 3',
+                            viewModel.fillStop.value < 0.6 ? 'Step 1' : viewModel.fillStop.value == 0.6 ? 'Step 2' : '',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 10,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500
                             ),
                           ),
                         ),
@@ -333,10 +344,12 @@ class StatusView extends StatelessWidget {
                           height: 3,
                         ),
                         Obx(() => Text(
-                            viewModel.fillStop.value == 0.03 ? 'Admission Form' : viewModel.fillStop.value == 0.3 ? 'Fee Slip' : 'Interview Call',
+                            viewModel.fillStop.value < 0.6 ? 'Admission Form' : viewModel.fillStop.value == 0.6 ? 'Fee Slip' : 'Completed',
                             style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 11.5
+                                color: Color(0xff435060),
+                                fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Poppins'
                             ),
                           ),
                         ),
@@ -347,10 +360,11 @@ class StatusView extends StatelessWidget {
                           width: MediaQuery.of(context).size.width/1.2,
                           child: Obx(() => Text(
                               viewModel.fillStop.value == 0.03 ?
-                              'Welcome to out UET merit checking and online admission application! Our app makes it easy to check your results and apply for admission to the University of Engineering and Technology.' : viewModel.fillStop.value == 0.3 ? 'Download your UET admission fee slip submit in UBL bank and upload in pdf form.' : 'Bring your all original documents in hard copy in the given time to confirm your seats.',
+                              'Welcome to out UET merit checking and online admission application! Our app makes it easy to check your results and apply for admission to the University of Engineering and Technology.' : viewModel.fillStop.value == 0.3 ? 'Your application is under review. This might take between 1-2 days.' : viewModel.fillStop.value == 0.6 ? 'Download your UET admission fee slip submit in UBL bank and upload in pdf form.' : 'Application accepted. Wait for Interview call date',
                               style: TextStyle(
                                 color: Colors.grey.shade400,
                                 fontSize: 14,
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w700
                               ),
                             ),
@@ -390,7 +404,9 @@ class StatusView extends StatelessWidget {
                                       const Text(
                                         'Process Completion',
                                         style: TextStyle(
+                                          fontWeight: FontWeight.w500,
                                           color: Colors.white,
+                                          fontFamily: 'Poppins',
                                           fontSize: 12
                                         ),
                                       ),
@@ -398,7 +414,9 @@ class StatusView extends StatelessWidget {
                                         viewModel.fillStop.value == 0.03 ? '0%' : viewModel.fillStop.value == 0.3 ? '35%' : viewModel.fillStop.value == 0.6 ? "70%" : '99%',
                                         style: const TextStyle(
                                           color: Colors.white,
-                                          fontSize: 12
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Poppins'
                                         ),
                                       )
                                     ],
@@ -438,6 +456,8 @@ class StatusView extends StatelessWidget {
                                       Text(
                                         'Remaining Time',
                                         style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w500,
                                           color: Colors.white,
                                           fontSize: 12
                                         ),
@@ -445,6 +465,8 @@ class StatusView extends StatelessWidget {
                                       Text(
                                         '5 days remaining',
                                         style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Poppins',
                                           color: Colors.white,
                                           fontSize: 12
                                         ),
@@ -469,6 +491,7 @@ class StatusView extends StatelessWidget {
                                   style: const TextStyle(
                                     color: Color.fromRGBO(67, 80, 96, 1),
                                     fontSize: 16,
+                                    fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w600
                                   ),
                                 ),
@@ -480,6 +503,7 @@ class StatusView extends StatelessWidget {
                                   style: TextStyle(
                                       color: Color.fromRGBO(67, 80, 96, 1),
                                       fontSize: 14,
+                                      fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w600
                                   ),
                                 ),
@@ -491,6 +515,7 @@ class StatusView extends StatelessWidget {
                                     style: const TextStyle(
                                         color: Color.fromRGBO(68, 68, 67, 1),
                                         fontSize: 12,
+                                        fontFamily: 'Poppins',
                                         fontWeight: FontWeight.w400
                                     ),
                                   ),
@@ -503,6 +528,7 @@ class StatusView extends StatelessWidget {
                                     style: const TextStyle(
                                         color: Color.fromRGBO(68, 68, 67, 1),
                                         fontSize: 12,
+                                        fontFamily: 'Poppins',
                                         fontWeight: FontWeight.w400
                                     ),
                                   ),
@@ -538,6 +564,7 @@ class StatusView extends StatelessWidget {
                                   'Submit',
                                   style: TextStyle(
                                     color: Colors.white,
+                                    fontFamily: 'Poppins',
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
@@ -576,7 +603,8 @@ class StatusView extends StatelessWidget {
               style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
-                  fontSize: 13
+                  fontSize: 13,
+                fontFamily: 'Poppins'
               ),
             ),
           ),
@@ -604,6 +632,7 @@ class StatusView extends StatelessWidget {
                                     child: Text(
                                       'Upload Here',
                                       style: TextStyle(
+                                        fontFamily: 'Poppins',
                                           color: Colors.grey,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold
@@ -645,6 +674,7 @@ class StatusView extends StatelessWidget {
                                     child: viewModel.docsList[index].showLoader == false ? const Text(
                                       'Upload Here',
                                       style: TextStyle(
+                                        fontFamily: 'Poppins',
                                           color: Colors.grey,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold
@@ -695,6 +725,7 @@ class StatusView extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.red,
                           fontSize: 13,
+                          fontFamily: 'Poppins',
                           fontWeight: FontWeight.bold
                       ),
                     ),

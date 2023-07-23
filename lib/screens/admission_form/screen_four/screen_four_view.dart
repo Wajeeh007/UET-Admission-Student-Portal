@@ -192,7 +192,8 @@ class ScreenFourView extends StatelessWidget {
               fieldName.toString(),
               maxLines: 3,
               style: const TextStyle(
-                  color: Colors.black,
+                fontFamily: 'Poppins',
+                  color: Color(0xff435060),
                   fontWeight: FontWeight.w600,
                   fontSize: 13
               ),
@@ -224,6 +225,7 @@ class ScreenFourView extends StatelessWidget {
                                   child: viewModel.fieldList[index].showLoader == false ? const Text(
                                     'Upload Here',
                                     style: TextStyle(
+                                      fontFamily: 'Poppins',
                                         color: Colors.grey,
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold
@@ -273,6 +275,7 @@ class ScreenFourView extends StatelessWidget {
                       'Upload Document',
                       style: TextStyle(
                           color: Colors.red,
+                          fontFamily: 'Poppins',
                           fontSize: 13,
                           fontWeight: FontWeight.bold
                       ),

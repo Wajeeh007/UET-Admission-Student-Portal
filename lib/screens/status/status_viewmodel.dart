@@ -9,6 +9,7 @@ import 'package:online_admission/screens/admission_form/screen_four/screen_four_
 import 'package:online_admission/screens/base/base_layout_viewmodel.dart';
 import 'dart:io';
 import 'package:pdfx/pdfx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StatusViewModel extends GetxController{
 
@@ -21,10 +22,18 @@ class StatusViewModel extends GetxController{
   final ImagePicker _picker = ImagePicker();
   RxBool overlay = false.obs;
   RxBool proceed = false.obs;
+  RxBool formSubmitted = false.obs;
   RxMap<String, dynamic> downloadLinks = <String, dynamic>{}.obs;
 
   @override
-  void onInit() {
+  void onInit() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final check = await prefs.getBool('formSubmitted');
+    if(check == null){}
+    else{
+      fillStop.value = 0.3;
+      formSubmitted.value = check;
+    }
     getApplicationStatus();
     super.onInit();
   }
@@ -32,14 +41,22 @@ class StatusViewModel extends GetxController{
   getApplicationStatus()async{
     await FirebaseFirestore.instance.collection('user_data').doc(userID).get().then((doc) async{
         final data = doc.data();
-        if(data!.containsKey('documents_accepted')){
-          fillStop.value = 0.6;
+        if(data == null){
+          return;
         } else {
-          if(data.containsKey('form_details_checked')){
-            if(data['fee_slip_checked'] == false && data['form_details_checked'] == false){
-              return;
-            } else {
-              await getRejectedData();
+          if(data['application_status'] == true){
+            fillStop.value = 0.3;
+          }
+          else if (data['documents_accepted'] == true) {
+            fillStop.value = 0.9;
+          } else {
+            if (data.containsKey('form_details_checked')) {
+              if (data['fee_slip_checked'] == false &&
+                  data['form_details_checked'] == false) {
+                return;
+              } else {
+                await getRejectedData();
+              }
             }
           }
         }

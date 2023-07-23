@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:online_admission/screens/base/base_layout.dart';
-import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen.dart';
+import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:online_admission/constants.dart';
 import 'package:flutter/services.dart';
@@ -38,7 +38,17 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(
                             height: 18,
                           ),
-                          Center(child: Text('Welcome Back, please login to access your UET merit list and admission application', style: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w600, fontSize: 14.5),)),
+                          Center(
+                              child: Text(
+                                'Welcome Back, please login to access your UET merit list and admission application',
+                                style: TextStyle(
+                                    color: Color(0xff444443),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.5,
+                                  fontFamily: 'Poppins'
+                                ),
+                              ),
+                          ),
                         const SizedBox(
                           height: 16,
                         ),
@@ -48,7 +58,10 @@ class LoginScreen extends StatelessWidget {
                           children: [
                             const Padding(
                               padding: EdgeInsets.only(left: 15.0),
-                              child: Align(alignment: Alignment.centerLeft,child: Text('Email', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
+                              child: Align(alignment: Alignment.centerLeft,child: Text(
+                                'Email',
+                                style: TextStyle(
+                                    color: Color(0xff444443), fontSize: 15, fontWeight: FontWeight.w700),)),
                             ),
                             const SizedBox(
                               height: 7,
@@ -84,7 +97,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           const Padding(
                             padding: EdgeInsets.only(left: 15.0),
-                            child: Align(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),)),
+                            child: Align(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: Color(0xff444443), fontSize: 15, fontWeight: FontWeight.w700),)),
                           ),
                           const SizedBox(
                             height: 10,
@@ -123,7 +136,7 @@ class LoginScreen extends StatelessWidget {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                                 onPressed: (){},
-                                child: const Text('Forgot Password ?', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, shadows: [
+                                child: const Text('Forgot Password ?', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, shadows: [
                                   Shadow(
                                       color: primaryColor,
                                       offset: Offset(0.0, -0.8)
@@ -166,8 +179,9 @@ class LoginScreen extends StatelessWidget {
                               child: const Text('Log In',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
+                                    fontFamily: 'Poppins',
                                       color: Colors.white,
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 16.0
                                   )),
                             ),
@@ -175,7 +189,7 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(
                             height: 25,
                           ),
-                          const Text('Or', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 16),),
+                          const Text('Or', style: TextStyle(fontFamily: 'Poppins', color: Color(0xff444443), fontWeight: FontWeight.bold, fontSize: 16),),
                           const SizedBox(
                             height: 17,
                           ),
@@ -238,7 +252,10 @@ class LoginScreen extends StatelessWidget {
                               const Text(
                                 'Don\'t have an account?',
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Color(0xff444443),
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               TextButton(
@@ -248,6 +265,7 @@ class LoginScreen extends StatelessWidget {
                                   child: const Text(
                                     'Sign Up',
                                     style: TextStyle(
+                                      fontFamily: 'Poppins',
                                       fontWeight: FontWeight.bold,
                                       shadows: [
                                         Shadow(

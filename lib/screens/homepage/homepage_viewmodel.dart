@@ -14,13 +14,15 @@ class HomePageViewModel extends GetxController {
   RxBool transformContainer = false.obs;
   RxDouble angle = 0.0.obs;
   RxString fieldName = 'Search fields merit here'.obs;
+  Rx<Uint8List> fileBytes = Uint8List(0).obs;
   Rx<Uint8List> csvBytes = Uint8List(0).obs;
+  RxString filePath = ''.obs;
   RxList<String> meritListInString = <String>[].obs;
   RxList<MeritModel> meritList = <MeritModel>[].obs;
   RxBool meritListVisibilty = false.obs;
   RxString userName = ''.obs;
 
-  RxList<DropdownMenuItem<String>> fields = <DropdownMenuItem<String>>[
+  List<DropdownMenuItem<String>> fields = <DropdownMenuItem<String>>[
     const DropdownMenuItem(value: 'Search fields merit here',
       child: Text('Search fields merit here', textAlign: TextAlign.center,
         style: TextStyle(
@@ -80,13 +82,27 @@ class HomePageViewModel extends GetxController {
           style: TextStyle(color: Colors.black,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w600)),),
-  ].obs;
+  ];
 
   @override
   void onInit()async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userName.value = await prefs.getString('userName').toString();
+    getImage();
     super.onInit();
+  }
+
+  getImage()async{
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    filePath.value = await prefs.getString('displayImage').toString();
+    List<int> list =
+    filePath.value.replaceAll('[', '').replaceAll(']', '')
+        .split(',')
+        .map<int>((e) {
+      return int.parse(e); //use tryParse if you are not confirm all content is int or require other handling can also apply it here
+    }).toList();
+    fileBytes.value = Uint8List.fromList(list);
   }
 
   getMeritList()async{

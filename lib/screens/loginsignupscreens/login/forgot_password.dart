@@ -61,7 +61,10 @@ class _ConfirmEmailState extends State<ConfirmEmail> {
                       key: formKey,
                         child: Column(
                           children: [
-                          const Text('Email', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),),
+                          const Text(
+                            'Email',
+                            style: TextStyle(
+                                color: Color(0xff444443), fontSize: 15, fontWeight: FontWeight.w700, fontFamily: 'Poppins'),),
                           TextFormField(
                             onChanged: (value){
                               setState(() {

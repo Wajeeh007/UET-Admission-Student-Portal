@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/loginsignupscreens/login/login_screen.dart';
-import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen.dart';
+import 'package:online_admission/screens/loginsignupscreens/sign_up/signup_screen_view.dart';
 
 class AuthChoose extends StatelessWidget {
 
@@ -19,15 +19,26 @@ class AuthChoose extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Welcome to UET Admission', style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),),
+                const Text(
+                  'Welcome to UET Admission',
+                  style: TextStyle(
+                      color: Color(0xff444443), fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'Poppins'),),
                 const SizedBox(
                   height: 20,
                 ),
-                Image.asset('assets/images/uni_logo.png', height: 150, width: 170, fit: BoxFit.fill,),
+                Image.asset('assets/images/uni_logo.png', height: 209, width: 211, fit: BoxFit.fill,),
                 const SizedBox(
                   height: 16,
                 ),
-                Text('Welcome to our UET merit checking and online admission application. Our app makes it easy to check your results and apply for admission to the University of Engineering and Technology. With a user-friendly interface and streamlined process, we are committed to providing you with the best experience possible', style: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w600, fontSize: 13),),
+                Text(
+                  'Welcome to our UET merit checking and online admission application. Our app makes it easy to check your results and apply for admission to the University of Engineering and Technology. With a user-friendly interface and streamlined process, we are committed to providing you with the best experience possible',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                      color: Colors.grey.shade400,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14
+                  ),
+                ),
                 const SizedBox(
                   height: 23,
                 ),
