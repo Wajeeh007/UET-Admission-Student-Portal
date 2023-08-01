@@ -316,6 +316,9 @@ class ScreenFiveViewModel extends GetxController{
     //   'fromUni': false,
     //   'message': 'Your application has been submitted',
     // });
+    await FirebaseFirestore.instance.collection('receipts').doc(userID).set({
+      'fee_slip': feeSlip
+    });
     await prefs.setBool('formSubmitted', true);
 
     int count = 0;
