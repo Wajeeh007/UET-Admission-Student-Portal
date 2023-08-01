@@ -5,12 +5,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_admission/model/merit_model.dart';
+import 'package:online_admission/screens/admission_form/screen_one/screen_one_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
 import '../base/base_layout_viewmodel.dart';
 
 class HomePageViewModel extends GetxController {
 
+  RxString filterEteaId = ''.obs;
   RxBool transformContainer = false.obs;
   RxDouble angle = 0.0.obs;
   RxString fieldName = 'Search fields merit here'.obs;
@@ -18,9 +20,12 @@ class HomePageViewModel extends GetxController {
   Rx<Uint8List> csvBytes = Uint8List(0).obs;
   RxString filePath = ''.obs;
   RxList<String> meritListInString = <String>[].obs;
-  RxList<MeritModel> meritList = <MeritModel>[].obs;
+  RxList<MeritModel> filteredList = <MeritModel>[].obs;
+  RxList<MeritModel> completeList = <MeritModel>[].obs;
   RxBool meritListVisibilty = false.obs;
   RxString userName = ''.obs;
+  TextEditingController meritSearchController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   List<DropdownMenuItem<String>> fields = <DropdownMenuItem<String>>[
     const DropdownMenuItem(value: 'Search fields merit here',
@@ -126,8 +131,10 @@ class HomePageViewModel extends GetxController {
               meritListInString.value = ls.convert(string);
               meritListInString.forEach((element) {
                 List<String> elementSplit = element.split(",");
-                meritList.add(MeritModel(meritNumber: elementSplit[0], studentName: elementSplit[1], fatherName: elementSplit[2], aggregate: elementSplit[3], eligibility: elementSplit[4]));
-                meritList.refresh();
+                filteredList.add(MeritModel(eteaNumber: elementSplit[0], meritNumber: elementSplit[1], studentName: elementSplit[2], fatherName: elementSplit[3], aggregate: elementSplit[4], eligibility: elementSplit[5]));
+                filteredList.refresh();
+                completeList.add(MeritModel(eteaNumber: elementSplit[0], meritNumber: elementSplit[1], studentName: elementSplit[2], fatherName: elementSplit[3], aggregate: elementSplit[4], eligibility: elementSplit[5]));
+                completeList.refresh();
                 meritListVisibilty.value = true;
               });
               baseLayoutViewModel.overlay.value = false;
@@ -143,4 +150,45 @@ class HomePageViewModel extends GetxController {
       showToast('Error: $e');
     }
   }
+
+  filterMeritList(String value){
+    filteredList.clear();
+    if(value == ''){
+      completeList.forEach((element) {
+        filteredList.add(element);
+        filteredList.refresh();
+      });
+    } else {
+      completeList.forEach((element) {
+        if (element.eteaNumber!.contains(value)) {
+          filteredList.add(element);
+          filteredList.refresh();
+        }
+      });
+    }
+  }
+
+  checkEligibility()async{
+
+    final index = completeList.indexWhere((element) => element.eteaNumber == filterEteaId.value);
+    if(index == -1){
+      showToast('Etea ID not in merit list');
+    } else{
+      if(completeList[index].eligibility == 'No'){
+        showToast('Not eligible to apply for ${fieldName.value}');
+      } else {
+        BaseLayoutViewModel baseLayoutViewModel = Get.find();
+        if (baseLayoutViewModel.formSubmitted.value == false) {
+          Get.to(() => ScreenOneView(), arguments: [{
+            'ETEA ID': filterEteaId.value,
+            'Department': fieldName.value,
+          }]);
+        } else{
+          showToast('An admission form has already been submitted with this account');
+        }
+      }
+    }
+
+  }
+
 }

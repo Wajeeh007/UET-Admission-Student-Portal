@@ -29,20 +29,29 @@ class BaseLayoutViewModel extends GetxController{
   ];
 
   void changePage(int index){
+    if(index == 1){
+      bottomNavBarVisibility.value = false;
+    } else{
+      bottomNavBarVisibility.value = true;
+    }
     pageIndex.value = index;
     bottomNavBarController.jumpToPage(index);
   }
 
   checkFirebase()async{
-    var userData = await FirebaseFirestore.instance.collection('user_data').doc(userID);
-    final docCheck = await userData.get();
-    final data = docCheck.data();
-    final submitted = data?['application_status'];
-    if(submitted == false){
-      return;
-    }
-    else{
-      formSubmitted.value = submitted;
-    }
+    await FirebaseFirestore.instance.collection('user_data').doc(userID).get().then((doc) {
+      final data = doc.data();
+      if(data == null){
+        return;
+      } else{
+        final submitted = data['application_status'];
+        if(submitted == false){
+          return;
+        }
+        else{
+          formSubmitted.value = submitted;
+        }
+      }
+    });
   }
 }

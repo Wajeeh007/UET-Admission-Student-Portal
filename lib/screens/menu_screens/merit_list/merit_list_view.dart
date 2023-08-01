@@ -57,6 +57,7 @@ class MeritListView extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     meritListHeading('ETEA Id'),
+                                    meritListHeading('Merit No.'),
                                     meritListHeading('Name'),
                                     meritListHeading('F/Name'),
                                     meritListHeading('Aggregate'),
@@ -77,7 +78,8 @@ class MeritListView extends StatelessWidget {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
-                                          meritListText(viewModel.meritList[index].meritNumber.toString(), 40),
+                                          meritListText(viewModel.meritList[index].eteaNumber.toString(), 40),
+                                          meritListText(viewModel.meritList[index].meritNumber.toString(), 45),
                                           meritListText(viewModel.meritList[index].studentName.toString(), 60),
                                           meritListText(viewModel.meritList[index].fatherName.toString(), 60),
                                           meritListText(viewModel.meritList[index].aggregate.toString(), 40),

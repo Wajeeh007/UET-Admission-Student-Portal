@@ -1,7 +1,7 @@
 class MeritModel{
 
-  String? meritNumber, studentName, fatherName, aggregate, eligibility ;
+  String? eteaNumber, meritNumber, studentName, fatherName, aggregate, eligibility ;
 
-  MeritModel({this.meritNumber, this.studentName, this.fatherName, this.aggregate, this.eligibility});
+  MeritModel({this.eteaNumber, this.meritNumber, this.studentName, this.fatherName, this.aggregate, this.eligibility});
 
 }

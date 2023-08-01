@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,7 @@ import 'package:online_admission/screens/admission_form/screen_two/screen_two_vi
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../widgets/admission_form_date_picker.dart';
 import '../../../widgets/admission_form_textformfields.dart';
+import '../../base/base_layout_viewmodel.dart';
 
 class ScreenOneView extends StatelessWidget {
 
@@ -164,12 +167,20 @@ class ScreenOneView extends StatelessWidget {
                                         ),
                                       ),
                                       items: viewModel.departmentList,
-                                      onChanged: (value){
-                                        viewModel.campusFieldVisibility.value = false;
-                                          viewModel.departmentName.value = value;
-                                          viewModel.departmentNameCheck.value = false;
-                                          viewModel.changeList(value);
-                                      },
+                                      onChanged: (value)async{
+                                        if(viewModel.eteaIDController.text.length != 6){
+                                          showToast('Enter valid etea id to choose department');
+                                        } else {
+                                          if(Get.arguments != null){
+                                            viewModel.campusFieldVisibility.value = false;
+                                            viewModel.departmentName.value = value;
+                                            viewModel.departmentNameCheck.value = false;
+                                            viewModel.changeList(value);
+                                          } else{
+                                            await viewModel.checkEligibility(value);
+                                          }
+                                        }
+                                          },
                                       value: viewModel.departmentName.value,
                                     ),
                                   ),
@@ -240,9 +251,9 @@ class ScreenOneView extends StatelessWidget {
                                             ),
                                           ),
                                           items: viewModel.campusList,
-                                          onChanged: (value){
-                                            viewModel.campus.value = value.toString();
-                                            viewModel.campusNameCheck.value = false;
+                                          onChanged: (value)async{
+                                                viewModel.campus.value = value.toString();
+                                                viewModel.campusNameCheck.value = false;
                                           },
                                           value: viewModel.campus.value,
                                         ),
@@ -456,7 +467,8 @@ class ScreenOneView extends StatelessWidget {
                           ),
                           child: MaterialButton(
                               onPressed: (){
-                                pageIndex = 0;
+                                BaseLayoutViewModel baseLayoutViewModel = Get.find();
+                                baseLayoutViewModel.changePage(0);
                               },
                             child: const Text(
                               'Cancel',

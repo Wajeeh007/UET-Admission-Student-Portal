@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:online_admission/screens/base/base_layout.dart';
 import 'package:online_admission/screens/loginsignupscreens/choose_login_or_signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    Timer(Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () {
       if(widget.email == null){
         Get.off(() => const AuthChoose());
       } else{
@@ -63,12 +60,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: Color(0xffd0874c),
+      backgroundColor: const Color(0xffd0874c),
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           child: Stack(
             fit: StackFit.loose,
             children: [
@@ -80,10 +77,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('assets/images/uni_logo.png', height: 209, width: 211,),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
-                    Text(
+                    const Text(
                       'Uet Admission',
                       style: TextStyle(
                         color: Colors.white,
@@ -102,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   width: 350,
                   height: 400,
                   decoration: BoxDecoration(
-                    color: Color(0xffd0874c),
+                    color: const Color(0xffd0874c),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Colors.white,
@@ -118,9 +115,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: Color(0xffd0874c),
+                    color: const Color(0xffd0874c),
                     border: Border.all(
-                      color: Color(0xff707070),
+                      color: const Color(0xff707070),
                       width: 1.3
                     )
                   ),
@@ -133,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   width: 200,
                   height: 250,
                   decoration: BoxDecoration(
-                    color: Color(0xffd0874c),
+                    color: const Color(0xffd0874c),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Colors.white,
@@ -149,9 +146,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: Color(0xffd0874c),
+                    color: const Color(0xffd0874c),
                     border: Border.all(
-                      color: Color(0xff707070),
+                      color: const Color(0xff707070),
                       width: 1.3
                     )
                   ),

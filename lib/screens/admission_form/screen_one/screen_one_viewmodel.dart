@@ -1,9 +1,15 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../constants.dart';
+import '../../../model/merit_model.dart';
+import '../../base/base_layout_viewmodel.dart';
 
 class ScreenOneViewModel extends GetxController{
 
@@ -27,13 +33,17 @@ class ScreenOneViewModel extends GetxController{
   RxString maritalStatusSelect = 'Single'.obs;
   RxBool loader = false.obs;
   var currentDateTime = DateTime.now();
+  Rx<Uint8List> csvBytes = Uint8List(0).obs;
   var currentYear;
   RxBool campusFieldVisibility = false.obs;
   RxList<DropdownMenuItem> campusList = <DropdownMenuItem>[].obs;
   RxBool formSubmittedCheck = false.obs;
   RxString userID = ''.obs;
+  RxList<String> meritListInString = <String>[].obs;
+  RxList<MeritModel> dataList = <MeritModel>[].obs;
 
   List<DropdownMenuItem> departmentList = [
+    const DropdownMenuItem(value: 'Architecture',child: Text('Architecture', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),),
     const DropdownMenuItem(value: 'Mechanical',child: Text('Mechanical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),),
     const DropdownMenuItem(value: 'Electrical',child: Text('Electrical', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),),),
     const DropdownMenuItem(value: 'Civil',child: Text('Civil', textAlign: TextAlign.center, style: TextStyle(color: Colors.black)),),
@@ -48,7 +58,7 @@ class ScreenOneViewModel extends GetxController{
 
   @override
   void onInit() async{
-    await getData();
+      await getData();
     currentYear = DateTime(currentDateTime.year);
     await getCheckFromFirebase();
     super.onInit();
@@ -74,6 +84,59 @@ class ScreenOneViewModel extends GetxController{
     }
   }
 
+  checkEligibility(String name)async{
+    BaseLayoutViewModel baseLayoutViewModel = Get.find();
+    baseLayoutViewModel.overlay.value = true;
+    try{
+      await FirebaseFirestore.instance.collection('merit_lists').doc(name).get().then((doc) async{
+        if(doc.exists){
+          final data = doc.data();
+          if(data == null){
+            showToast('No Merit Lists');
+          } else{
+            final downloadLink = data['merit_list'];
+            final csvRef = FirebaseStorage.instanceFor(
+                bucket: 'admissionapp-9c884.appspot.com').refFromURL(downloadLink);
+            await csvRef.getData(104857600).then((value) {
+              csvBytes.value = value!;
+              final string = String.fromCharCodes(csvBytes.value);
+              LineSplitter ls = const LineSplitter();
+              meritListInString.value = ls.convert(string);
+              meritListInString.forEach((element) {
+                List<String> elementSplit = element.split(",");
+                dataList.add(MeritModel(eteaNumber: elementSplit[0], meritNumber: elementSplit[1], studentName: elementSplit[2], fatherName: elementSplit[3], aggregate: elementSplit[4], eligibility: elementSplit[5]));
+                dataList.refresh();
+                if(element == meritListInString.last){
+                  final index = dataList.indexWhere((element) => element.eteaNumber == eteaIDController.text);
+                  if(index == -1){
+                    showToast('You\'re not in the merit list');
+
+                  } else{
+                    if(dataList[index].eligibility == 'No'){
+                      showToast('You\'re not eligible to apply for $name department');
+                    } else{
+                      departmentName.value = name;
+                      departmentNameCheck.value = false;
+                      campusFieldVisibility.value = true;
+                    }
+                  }
+                }
+              });
+              baseLayoutViewModel.overlay.value = false;
+            });
+            baseLayoutViewModel.overlay.value = false;
+          }
+        } else{
+          baseLayoutViewModel.overlay.value = false;
+          showToast('No Merit list');
+        }
+      });
+    } catch (e){
+      baseLayoutViewModel.overlay.value = false;
+      showToast('Error: $e');
+    }
+  }
+  
   getData()async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userID.value = await prefs.getString('userID').toString();
@@ -114,7 +177,8 @@ class ScreenOneViewModel extends GetxController{
         const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
         const DropdownMenuItem(value: 'Jalozai', child: Text('Jalozai', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
         const DropdownMenuItem(value: 'Bannu', child: Text('Bannu', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
-      ]) : campusList.add(
+      ]) : departmentName.value == 'Architecture' ? campusList.add(const DropdownMenuItem(value: 'Abbottabad', child: Text('Abbottabad', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),)
+          : campusList.add(
         const DropdownMenuItem(value: 'Peshawar', child: Text('Peshawar', textAlign: TextAlign.center, style: TextStyle(color: Colors.black),)),
       );
     }
@@ -154,5 +218,6 @@ class ScreenOneViewModel extends GetxController{
     }
       campusList.refresh();
       campusFieldVisibility.value = true;
+
     }
 }

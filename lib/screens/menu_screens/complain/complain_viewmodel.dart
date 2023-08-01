@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ComplainViewModel extends GetxController{
 
   TextEditingController complainTitle = TextEditingController();
+  TextEditingController departmentNameController = TextEditingController();
   TextEditingController complainDescrition = TextEditingController();
   final formKey = GlobalKey<FormState>();
   RxBool overlay = false.obs;
@@ -28,6 +29,7 @@ class ComplainViewModel extends GetxController{
     await FirebaseFirestore.instance.collection('complains').doc(userID).set({
       'name': userName.toString(),
       'title': complainTitle.text,
+      'department': departmentNameController.text,
       'description': complainDescrition.text,
     }).then((value) {
       complainTitle.clear();

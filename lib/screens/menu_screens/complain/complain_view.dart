@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:online_admission/constants.dart';
-import 'package:online_admission/screens/complain/complain_viewmodel.dart';
+
+import 'complain_viewmodel.dart';
 
 class ComplainScreen extends StatelessWidget {
 
@@ -114,6 +115,63 @@ class ComplainScreen extends StatelessWidget {
                                   color: primaryColor
                                 ),
                                 borderRadius: BorderRadius.circular(28)
+                              ),
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 23.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Department',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xff435060),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          TextFormField(
+                            cursorColor: Colors.white,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 19
+                            ),
+                            controller: viewModel.departmentNameController,
+                            validator: (value){
+                              if(value == null || value == ''){
+                                return 'Field cannot be empty';
+                              }
+                              else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 18),
+                              errorStyle: const TextStyle(
+                                  fontWeight: FontWeight.w600
+                              ),
+                              filled: true,
+                              fillColor: primaryColor,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      width: 0,
+                                      color: primaryColor
+                                  ),
+                                  borderRadius: BorderRadius.circular(28)
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      width: 2,
+                                      color: primaryColor
+                                  ),
+                                  borderRadius: BorderRadius.circular(28)
                               ),
                             ),
                           ),

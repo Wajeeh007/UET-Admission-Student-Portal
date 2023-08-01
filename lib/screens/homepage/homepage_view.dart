@@ -5,8 +5,8 @@ import 'package:online_admission/screens/homepage/homepage_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
 import '../../functions/google_and_facebook_auth.dart';
-import '../complain/complain_view.dart';
 import '../loginsignupscreens/choose_login_or_signup.dart';
+import '../menu_screens/complain/complain_view.dart';
 import '../menu_screens/previous_merit_lists/previous_merit_list_view.dart';
 
 class HomePage extends StatefulWidget{
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                                             radius: 23,
                                             backgroundImage: viewModel.fileBytes.value.isEmpty ? null : MemoryImage(viewModel.fileBytes.value),
                                             backgroundColor: Colors.transparent,
-                                            child: viewModel.fileBytes.value.isEmpty ? Icon(Icons.account_circle_outlined, size: 35,color: Colors.white,) : null,
+                                            child: viewModel.fileBytes.value.isEmpty ? const Icon(Icons.account_circle_outlined, size: 35,color: Colors.white,) : null,
                                           ),
                                         )
                                       ],
@@ -252,14 +252,14 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                         Container(
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height/1.62,
+                          height: MediaQuery.of(context).size.height/1.9,
                           child: Obx(() => Visibility(
                               visible: viewModel.meritListVisibilty.value,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
                                 child: Container(
-                                  height: MediaQuery.of(context).size.height/1.97,
-                                  width: MediaQuery.of(context).size.width/1.1,
+                                  // height: MediaQuery.of(context).size.height/5,
+                                  width: MediaQuery.of(context).size.width/0.9,
                                   padding: EdgeInsets.zero,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -274,62 +274,68 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                                     children: [
                                       SingleChildScrollView(
                                         physics: const ScrollPhysics(),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              width: double.infinity,
-                                              height: 50,
-                                              decoration: const BoxDecoration(
-                                                  color: Color(0xffd1d3da),
-                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))
+                                        child: SingleChildScrollView(
+                                          physics: ScrollPhysics(),
+                                          scrollDirection: Axis.horizontal,
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                width: MediaQuery.of(context).size.width/0.9,
+                                                height: 50,
+                                                decoration: const BoxDecoration(
+                                                    color: Color(0xffd1d3da),
+                                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  children: [
+                                                    meritListHeading('ETEA Id'),
+                                                    meritListHeading('Merit No.'),
+                                                    meritListHeading('Name'),
+                                                    meritListHeading('F/Name'),
+                                                    meritListHeading('Aggregate'),
+                                                    meritListHeading('Eligibility'),
+                                                  ],
+                                                )
                                               ),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: [
-                                                  meritListHeading('ETEA Id'),
-                                                  meritListHeading('Name'),
-                                                  meritListHeading('F/Name'),
-                                                  meritListHeading('Aggregate'),
-                                                  meritListHeading('Eligibility'),
-                                                ],
-                                              )
-                                            ),
-                                            ListView.builder(
-                                              scrollDirection: Axis.vertical,
-                                              shrinkWrap: true,
-                                              itemCount: viewModel.meritList.length,
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              itemBuilder: (context, index){
-                                                return Padding(
-                                                  padding: const EdgeInsets.only(top: 12.0),
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width/0.9,
+                                                child: ListView.builder(
+                                                  scrollDirection: Axis.vertical,
+                                                  shrinkWrap: true,
+                                                  itemCount: viewModel.filteredList.length,
+                                                  physics: const NeverScrollableScrollPhysics(),
+                                                  itemBuilder: (context, index){
+                                                    return Padding(
+                                                      padding: const EdgeInsets.only(top: 12.0),
+                                                      child: Column(
                                                         children: [
-                                                          meritListText(viewModel.meritList[index].meritNumber.toString(), 31),
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(left: 10.0),
-                                                            child: meritListText(viewModel.meritList[index].studentName.toString(), 40),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                            children: [
+                                                              meritListText(viewModel.filteredList[index].eteaNumber.toString(), 31),
+                                                              meritListText(viewModel.filteredList[index].meritNumber.toString(), 40),
+                                                              Padding(padding: EdgeInsets.only(left: 6),child: meritListText(viewModel.filteredList[index].studentName.toString(), 45)),
+                                                              meritListText(viewModel.filteredList[index].fatherName.toString(), 38),
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(right: 10.0),
+                                                                child: meritListText(viewModel.filteredList[index].aggregate.toString(), 34),
+                                                              ),
+                                                              meritListText(viewModel.filteredList[index].eligibility.toString(), 25),
+                                                                ],
                                                           ),
-                                                          meritListText(viewModel.meritList[index].fatherName.toString(), 38),
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(right: 10.0),
-                                                            child: meritListText(viewModel.meritList[index].aggregate.toString(), 34),
-                                                          ),
-                                                          meritListText(viewModel.meritList[index].eligibility.toString(), 25),
-                                                            ],
+                                                          const Divider(
+                                                            color: Color(0xffd1d3da),
+                                                            thickness: 1.5,
+                                                          )
+                                                        ],
                                                       ),
-                                                      const Divider(
-                                                        color: Color(0xffd1d3da),
-                                                        thickness: 1.5,
-                                                      )
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          ],
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       Positioned(
@@ -349,7 +355,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                                         ),
                                       ),
                                       Positioned(
-                                        right: MediaQuery.of(context).size.width/2.66,
+                                        right: MediaQuery.of(context).size.width/2.8,
                                         child: Container(
                                           color: const Color(0xffd1d3da),
                                           width: 1.5,
@@ -371,6 +377,119 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
                             ),
                           ),
                         ),
+                        Obx(() => Visibility(
+                          visible: viewModel.meritListVisibilty.value,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Form(
+                                key: viewModel.formKey,
+                                child: TextFormField(
+                                  controller: viewModel.meritSearchController,
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (value)async{
+                                    viewModel.filterEteaId.value = value;
+                                    await viewModel.filterMeritList(value);
+                                  },
+                                  validator: (value){
+                                    if(value?.length != 6){
+                                      return showToast('Enter valid etea id to proceed');
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x66d0874c),
+                                        width: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(25))
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x66d0874c),
+                                          width: 0.1,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(25))
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x66d0874c),
+                                          width: 0.1,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(25))
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x66d0874c),
+                                          width: 0.1,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(25))
+                                    ),
+                                    filled: true,
+                                    constraints: BoxConstraints(
+                                      maxWidth: 250,
+                                      maxHeight: 50
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    hintText: 'Enter etea number for admission',
+                                    hintStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13
+                                    ),
+                                    fillColor: Color(0x66d0874c)
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                width: 70,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 2,
+                                      blurRadius: 2,
+                                      offset: Offset(0, 3)
+                                    )
+                                  ],
+                                    color: Color(0xffd0874c),
+                                  borderRadius: BorderRadius.all(Radius.circular(25))
+                                ),
+                                child: Center(
+                                  child: TextButton(
+                                    onPressed: ()async{
+                                      if(viewModel.formKey.currentState!.validate()){
+                                        await viewModel.checkEligibility();
+                                      }
+                                    },
+                                    child: Text(
+                                      'Apply',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              )
+                            ],
+                          ),
+                        ))
                       ],
                     ),
                   ),
@@ -403,15 +522,17 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin {
   meritListText(String text, double width){
     return SizedBox(
       width: width,
-      child: Text(
-        text,
-        maxLines: 2,
-        overflow: TextOverflow.fade,
-        style: const TextStyle(
-            color: Color(0xff435060),
-            fontWeight: FontWeight.w700,
-            fontFamily: 'Poppins',
-          fontSize: 8
+      child: Center(
+        child: Text(
+          text,
+          maxLines: 2,
+          overflow: TextOverflow.fade,
+          style: const TextStyle(
+              color: Color(0xff435060),
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Poppins',
+            fontSize: 8
+          ),
         ),
       ),
     );

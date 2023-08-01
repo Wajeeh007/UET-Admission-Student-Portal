@@ -33,11 +33,12 @@ class MeritListViewModel extends GetxController {
       meritListInString.value = ls.convert(string);
       meritListInString.forEach((element) {
         List<String> elementSplit = element.split(",");
-        meritList.add(MeritModel(meritNumber: elementSplit[0],
-            studentName: elementSplit[1],
-            fatherName: elementSplit[2],
-            aggregate: elementSplit[3],
-            eligibility: elementSplit[4]));
+        meritList.add(MeritModel(eteaNumber: elementSplit[0],
+            meritNumber: elementSplit[1],
+            studentName: elementSplit[2],
+            fatherName: elementSplit[3],
+            aggregate: elementSplit[4],
+            eligibility: elementSplit[5]));
         meritList.refresh();
       });
       overlay.value = false;
