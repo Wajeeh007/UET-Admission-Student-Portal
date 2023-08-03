@@ -85,7 +85,7 @@ class ScreenFiveView extends StatelessWidget {
                     height: 15,
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width/2,
+                    width: MediaQuery.of(context).size.width/1.5,
                     height: 45,
                     decoration: const BoxDecoration(
                       color: primaryColor,
@@ -319,7 +319,7 @@ class ScreenFiveView extends StatelessWidget {
                                               style: TextStyle(
                                                 fontFamily: 'Poppins',
                                                   color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
+                                                  fontWeight: FontWeight.w400,
                                                   fontSize: 15,
                                               ),
                                             ),

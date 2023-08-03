@@ -93,6 +93,7 @@ class ScreenOneViewModel extends GetxController{
           final data = doc.data();
           if(data == null){
             showToast('No Merit Lists');
+            campusFieldVisibility.value = true;
           } else{
             final downloadLink = data['merit_list'];
             final csvRef = FirebaseStorage.instanceFor(
@@ -129,6 +130,8 @@ class ScreenOneViewModel extends GetxController{
         } else{
           baseLayoutViewModel.overlay.value = false;
           showToast('No Merit list');
+          changeList(departmentName.value);
+          campusFieldVisibility.value = true;
         }
       });
     } catch (e){

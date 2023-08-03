@@ -177,6 +177,8 @@ class ScreenOneView extends StatelessWidget {
                                             viewModel.departmentNameCheck.value = false;
                                             viewModel.changeList(value);
                                           } else{
+                                            viewModel.departmentName.value = value;
+                                            viewModel.departmentNameCheck.value = false;
                                             await viewModel.checkEligibility(value);
                                           }
                                         }

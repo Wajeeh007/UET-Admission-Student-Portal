@@ -314,52 +314,47 @@ class ScreenTwoView extends StatelessWidget {
                                           ),
                                         ) : Container(),
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            AdmissionFormFields(
-                                              fieldName: 'Marks Obtained',
-                                              fieldValidationFunc: (value){
-                                                if(value == null || value == ''){
-                                                  return 'Enter Marks';
-                                                }
-                                                else if(viewModel.totalMarks.text == ''){
-                                                  return null;
-                                                }
-                                                else if(int.parse(viewModel.totalMarks.text) < int.parse(viewModel.obtainedMarks.text)){
-                                                  return 'Invalid Value';
-                                                }
-                                                else {
-                                                  return null;
-                                                }
-                                              },
-                                              fieldController: viewModel.obtainedMarks,
-                                              inputFilter: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                                FilteringTextInputFormatter.digitsOnly,
-                                              ],
-                                              keyboardType: TextInputType.number,
-                                              receivedWidth: MediaQuery.of(context).size.width/5.5,
-                                            ),
-                                            AdmissionFormFields(
-                                              fieldName: 'Total Marks',
-                                              fieldValidationFunc: (value){
-                                                if(value == null || value == ''){
-                                                  return 'Enter Marks';
-                                                }
-                                                else {
-                                                  return null;
-                                                }
-                                              },
-                                              receivedWidth: MediaQuery.of(context).size.width/5.5,
-                                              fieldController: viewModel.totalMarks,
-                                              inputFilter: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                                FilteringTextInputFormatter.digitsOnly,
-                                              ],
-                                              keyboardType: TextInputType.number,
-                                            ),
+                                        AdmissionFormFields(
+                                          fieldName: 'Marks Obtained',
+                                          fieldValidationFunc: (value){
+                                            if(value == null || value == ''){
+                                              return 'Enter Marks';
+                                            }
+                                            else if(viewModel.totalMarks.text == ''){
+                                              return null;
+                                            }
+                                            else if(int.parse(viewModel.totalMarks.text) < int.parse(viewModel.obtainedMarks.text)){
+                                              return 'Invalid Value';
+                                            }
+                                            else {
+                                              return null;
+                                            }
+                                          },
+                                          fieldController: viewModel.obtainedMarks,
+                                          inputFilter: [
+                                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                            FilteringTextInputFormatter.digitsOnly,
                                           ],
+                                          keyboardType: TextInputType.number,
+                                          receivedWidth: MediaQuery.of(context).size.width/5,
+                                        ),
+                                        AdmissionFormFields(
+                                          fieldName: 'Total Marks',
+                                          fieldValidationFunc: (value){
+                                            if(value == null || value == ''){
+                                              return 'Enter Marks';
+                                            }
+                                            else {
+                                              return null;
+                                            }
+                                          },
+                                          receivedWidth: MediaQuery.of(context).size.width/5.5,
+                                          fieldController: viewModel.totalMarks,
+                                          inputFilter: [
+                                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                            FilteringTextInputFormatter.digitsOnly,
+                                          ],
+                                          keyboardType: TextInputType.number,
                                         ),
                                         AdmissionFormFields(
                                           fieldName: 'Percentage',

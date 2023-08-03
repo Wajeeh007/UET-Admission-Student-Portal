@@ -156,52 +156,47 @@ class ScreenThreeView extends StatelessWidget {
                                           ),
                                         ) : Container(),
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            AdmissionFormFields(
-                                              fieldName: 'Marks Obtained:',
-                                              fieldValidationFunc: (value){
-                                                if(value == null || value == ''){
-                                                  return 'Enter Marks';
-                                                }
-                                                else if(viewModel.totalMarksController.text == ''){
-                                                  return null;
-                                                }
-                                                else if(int.parse(viewModel.totalMarksController.text) < int.parse(viewModel.marksObtainedController.text)){
-                                                  return 'Invalid Value';
-                                                }
-                                                else {
-                                                  return null;
-                                                }
-                                              },
-                                              fieldController: viewModel.marksObtainedController,
-                                              inputFilter: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                                FilteringTextInputFormatter.digitsOnly,
-                                              ],
-                                              receivedWidth: MediaQuery.of(context).size.width/5.5,
-                                              keyboardType: TextInputType.number,
-                                            ),
-                                            AdmissionFormFields(
-                                              fieldName: 'Total Marks:',
-                                              fieldValidationFunc: (value){
-                                                if(value == null || value == ''){
-                                                  return 'Enter Marks';
-                                                }
-                                                else {
-                                                  return null;
-                                                }
-                                              },
-                                              fieldController: viewModel.totalMarksController,
-                                              inputFilter: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                                FilteringTextInputFormatter.digitsOnly,
-                                              ],
-                                              receivedWidth: MediaQuery.of(context).size.width/5.5,
-                                              keyboardType: TextInputType.number,
-                                            ),
+                                        AdmissionFormFields(
+                                          fieldName: 'Marks Obtained:',
+                                          fieldValidationFunc: (value){
+                                            if(value == null || value == ''){
+                                              return 'Enter Marks';
+                                            }
+                                            else if(viewModel.totalMarksController.text == ''){
+                                              return null;
+                                            }
+                                            else if(int.parse(viewModel.totalMarksController.text) < int.parse(viewModel.marksObtainedController.text)){
+                                              return 'Invalid Value';
+                                            }
+                                            else {
+                                              return null;
+                                            }
+                                          },
+                                          fieldController: viewModel.marksObtainedController,
+                                          inputFilter: [
+                                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                            FilteringTextInputFormatter.digitsOnly,
                                           ],
+                                          receivedWidth: MediaQuery.of(context).size.width/5.5,
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                        AdmissionFormFields(
+                                          fieldName: 'Total Marks:',
+                                          fieldValidationFunc: (value){
+                                            if(value == null || value == ''){
+                                              return 'Enter Marks';
+                                            }
+                                            else {
+                                              return null;
+                                            }
+                                          },
+                                          fieldController: viewModel.totalMarksController,
+                                          inputFilter: [
+                                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                            FilteringTextInputFormatter.digitsOnly,
+                                          ],
+                                          receivedWidth: MediaQuery.of(context).size.width/5.5,
+                                          keyboardType: TextInputType.number,
                                         ),
                                         AdmissionFormFields(
                                           keyboardType: TextInputType.number,
