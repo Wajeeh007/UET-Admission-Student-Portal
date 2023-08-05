@@ -15,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../screen_four/screen_four_model.dart';
 import '../screen_three/screen_three_model.dart';
 import '../screen_two/screen_two_model.dart';
+import 'package:barcode_image/barcode_image.dart';
+import 'package:image/image.dart' as im;
 
 class ScreenFiveViewModel extends GetxController{
 
@@ -28,6 +30,8 @@ class ScreenFiveViewModel extends GetxController{
   RxString userID = ''.obs;
   final ImagePicker _picker = ImagePicker();
   Rx<io.File?> imageFile = io.File('').obs;
+  im.Image barcodeImage = im.Image(width: 60, height: 20);
+  String barcodePath = '';
 
   @override
   void onInit() async{
@@ -40,8 +44,14 @@ class ScreenFiveViewModel extends GetxController{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final data = await prefs.getString('1');
     var jsonData = jsonDecode(data!);
-    var pdf = Document();
     FirstPageModel details = FirstPageModel.fromJson(jsonData);
+    im.fill(barcodeImage, color: im.ColorRgb8(255, 255, 255));
+    drawBarcode(barcodeImage, Barcode.code128(), details.eteaID.toString(), font: im.arial14);
+    final barcode = io.File('/storage/emulated/0/Documents/barcode.png');
+    await barcode.writeAsBytes(im.encodePng(barcodeImage));
+    barcodePath = barcode.path;
+
+    var pdf = Document();
     pdf.addPage(
       Page(
           build: (context){
@@ -107,18 +117,18 @@ class ScreenFiveViewModel extends GetxController{
   Padding feeSlipSection(String copyName, FirstPageModel details){
     final currentDateTime = DateTime.now();
     final currentYear = currentDateTime.year;
+    final image = MemoryImage(io.File(barcodePath).readAsBytesSync());
     return Padding(
     padding: const EdgeInsets.symmetric(vertical: 25),
         child:
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
             children: [
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text('UNIV. OF ENGG & TECH., PESHAWAR')),
-          SizedBox(
-              height: 10
-          ),
+              Image(image),
+              SizedBox(height: 8),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('UNIV. OF ENGG & TECH., PESHAWAR')),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -161,11 +171,11 @@ class ScreenFiveViewModel extends GetxController{
             child: Text('UBL. Univ. Campus Branch'),
           ),
           SizedBox(
-              height: 20
+              height: 12
           ),
           Container(
               width: 240,
-              height: 200,
+              height: 180,
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(18)),
                   border: Border.all(
@@ -189,7 +199,7 @@ class ScreenFiveViewModel extends GetxController{
                             ]
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 4,
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -197,7 +207,7 @@ class ScreenFiveViewModel extends GetxController{
                             'Name: ${details.studentName}',
                           ),),
                         SizedBox(
-                            height: 10
+                            height: 4
                         ),
                         Align(
                             alignment: Alignment.centerLeft,
@@ -205,7 +215,7 @@ class ScreenFiveViewModel extends GetxController{
                               'S/D/o: ${details.fatherName}',
                             )),
                         SizedBox(
-                            height: 10
+                            height: 4
                         ),
                         Align(
                             alignment: Alignment.centerLeft,
@@ -229,7 +239,7 @@ class ScreenFiveViewModel extends GetxController{
                             )
                         ),
                         SizedBox(
-                            height: 20
+                            height: 15
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -320,7 +330,7 @@ class ScreenFiveViewModel extends GetxController{
       'fee_slip': feeSlip
     });
     await prefs.setBool('formSubmitted', true);
-
+    await io.File('storage/emulated/0/Documents/barcode.png').delete();
     int count = 0;
     BaseLayoutViewModel baseLayoutViewModel = Get.find();
     baseLayoutViewModel.changePage(0);

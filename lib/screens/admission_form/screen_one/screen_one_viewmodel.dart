@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
+import 'package:online_admission/screens/homepage/homepage_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
@@ -37,7 +38,6 @@ class ScreenOneViewModel extends GetxController{
   var currentYear;
   RxBool campusFieldVisibility = false.obs;
   RxList<DropdownMenuItem> campusList = <DropdownMenuItem>[].obs;
-  RxBool formSubmittedCheck = false.obs;
   RxString userID = ''.obs;
   RxList<String> meritListInString = <String>[].obs;
   RxList<MeritModel> dataList = <MeritModel>[].obs;
@@ -60,28 +60,7 @@ class ScreenOneViewModel extends GetxController{
   void onInit() async{
       await getData();
     currentYear = DateTime(currentDateTime.year);
-    await getCheckFromFirebase();
     super.onInit();
-  }
-
-  getCheckFromFirebase()async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final formCheckInStrg = await prefs.getBool('formSubmitted');
-    if(formCheckInStrg != null && formCheckInStrg != false){
-      formSubmittedCheck.value = true;
-    }
-    if(formSubmittedCheck.value == false){
-      var userData = FirebaseFirestore.instance.collection('user_data').doc(userID.value);
-      final docCheck = await userData.get();
-      final formSubmitted = docCheck.get('application_status');
-      if(formSubmitted == false){
-        return;
-      }
-      else{
-        await prefs.remove('formSubmitted');
-        await prefs.setBool('formSubmitted', true);
-      }
-    }
   }
 
   checkEligibility(String name)async{
