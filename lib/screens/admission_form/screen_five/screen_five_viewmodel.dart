@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
 import 'package:online_admission/screens/base/base_layout_viewmodel.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'dart:io' as io;
 import 'package:pdf/widgets.dart';
@@ -15,8 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../screen_four/screen_four_model.dart';
 import '../screen_three/screen_three_model.dart';
 import '../screen_two/screen_two_model.dart';
-import 'package:barcode_image/barcode_image.dart';
-import 'package:image/image.dart' as im;
 
 class ScreenFiveViewModel extends GetxController{
 
@@ -30,13 +27,13 @@ class ScreenFiveViewModel extends GetxController{
   RxString userID = ''.obs;
   final ImagePicker _picker = ImagePicker();
   Rx<io.File?> imageFile = io.File('').obs;
-  im.Image barcodeImage = im.Image(width: 60, height: 20);
-  String barcodePath = '';
+  RxString barcodePath = ''.obs;
 
   @override
   void onInit() async{
     prefs = await SharedPreferences.getInstance();
     userID.value = (await prefs.getString('userID'))!;
+    barcodePath.value = await prefs.getString('barcode')!;
     super.onInit();
   }
 
@@ -45,11 +42,6 @@ class ScreenFiveViewModel extends GetxController{
     final data = await prefs.getString('1');
     var jsonData = jsonDecode(data!);
     FirstPageModel details = FirstPageModel.fromJson(jsonData);
-    im.fill(barcodeImage, color: im.ColorRgb8(255, 255, 255));
-    drawBarcode(barcodeImage, Barcode.code128(), details.eteaID.toString(), font: im.arial14);
-    final barcode = io.File('/storage/emulated/0/Documents/barcode.png');
-    await barcode.writeAsBytes(im.encodePng(barcodeImage));
-    barcodePath = barcode.path;
 
     var pdf = Document();
     pdf.addPage(
@@ -82,27 +74,22 @@ class ScreenFiveViewModel extends GetxController{
         );
       })
     );
-    final bytes = await pdf.save();
-    var externalPath = await getExternalStorageDirectory();
-    try {
-      int? i = await prefs.getInt('i');
-      i ??= 0;
-      await io.File('/storage/emulated/0/Download/feeSlip$i.pdf').writeAsBytes(bytes, );
-      i++;
-      await prefs.setInt('i', i);
-    } catch (e){
-      int? i = await prefs.getInt('i');
-      if(i == null){
-        i = 0;
-      }
-      if(e=='file already exists'){
-        io.File('${externalPath?.path}/feeSlip$i.pdf').writeAsBytesSync(bytes);
-        // await file.writeAsBytes(bytes);
-        i += 1;
-        await prefs.setInt('i', i);
-      }
-    }
+    int? i = await prefs.getInt('i');
+    i ??= 0;
+    await createFile(i, pdf);
      return pdf.save();
+  }
+
+  createFile(int index, Document doc)async{
+    final bytes = await doc.save();
+    final pdfFile = io.File('/storage/emulated/0/Download/feeSlip$index.pdf');
+    try{
+      await pdfFile.writeAsBytes(bytes);
+      index++;
+      await prefs.setInt('i', index);
+    } catch (e){
+      createFile(index+1, doc);
+    }
   }
 
   pickFile(ImageSource src)async{
@@ -117,7 +104,7 @@ class ScreenFiveViewModel extends GetxController{
   Padding feeSlipSection(String copyName, FirstPageModel details){
     final currentDateTime = DateTime.now();
     final currentYear = currentDateTime.year;
-    final image = MemoryImage(io.File(barcodePath).readAsBytesSync());
+    final image = MemoryImage(io.File(barcodePath.value).readAsBytesSync());
     return Padding(
     padding: const EdgeInsets.symmetric(vertical: 25),
         child:
@@ -321,16 +308,19 @@ class ScreenFiveViewModel extends GetxController{
       'fee_slip_checked': false,
       'fee_slip_accepted': false,
       'documents_accepted': false,
+      'name': pageOneDetails.studentName
     });
     // await FirebaseFirestore.instance.collection('notifications').doc().set({
     //   'fromUni': false,
     //   'message': 'Your application has been submitted',
     // });
     await FirebaseFirestore.instance.collection('receipts').doc(userID.value).set({
-      'fee_slip': feeSlip
+      'fee_slip': feeSlip,
+      'name': pageOneDetails.studentName,
+      'etea_id': pageOneDetails.eteaID
     });
     await prefs.setBool('formSubmitted', true);
-    await io.File('storage/emulated/0/Documents/barcode.png').delete();
+    await io.File(barcodePath.value).delete();
     int count = 0;
     BaseLayoutViewModel baseLayoutViewModel = Get.find();
     baseLayoutViewModel.changePage(0);

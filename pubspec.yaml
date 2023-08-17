@@ -34,6 +34,8 @@ dependencies:
   path_provider: ^2.0.15
   firebase_storage: ^11.2.3
   barcode_image: ^2.0.3
+  downloads_path_provider_28: ^0.1.2
+  permission_handler: ^10.4.3
 
 dev_dependencies:
   flutter_test:

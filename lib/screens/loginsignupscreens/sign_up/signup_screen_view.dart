@@ -91,12 +91,12 @@ class SignUpScreen extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 6,
                                 ),
                                 Obx(() => Visibility(
                                     visible: viewModel.imageUploadError.value,
-                                    child: Text(
+                                    child: const Text(
                                       'Upload Image to Sign Up',
                                       style: TextStyle(
                                         color: Colors.red,
@@ -169,106 +169,106 @@ class SignUpScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                      const SizedBox(
+                                        height: 13.0,
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 15.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Password',
+                                            style: TextStyle(
+                                                color: Color(0xff444443),
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                                fontFamily: 'Poppins'
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 7,
+                                      ),
+                                      TextFormField(
+                                        onChanged: (value) {
+                                          viewModel.password.value = value;
+                                        },
+                                        validator: (value) {
+                                          if (value == null || value == '') {
+                                            return 'Field Cannot Be Empty';
+                                          }
+                                          else if (value.length < 8) {
+                                            return 'Password must be 8 characters long';
+                                          }
+                                          else {
+                                            return null;
+                                          }
+                                        },
+                                        obscureText: viewModel.passwd1Visibility.value,
+                                        decoration: kSignUpAndLogInScreenFieldDecoration.copyWith(
+                                          errorStyle: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 25),
+                                          hintText: 'Enter your password',
+                                          suffixIcon: IconButton(
+                                              onPressed: () {
+                                                viewModel.password1VisibilityFunc();
+                                              },
+                                              icon: viewModel.password1FieldIcon.value
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 13,
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 15.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Confirm Password',
+                                            style: TextStyle(
+                                                color: Color(0xff444443),
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                                fontFamily: 'Poppins'
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 7,
+                                      ),
+                                      TextFormField(
+                                        validator: (value) {
+                                          if (value == null || value == '') {
+                                            return 'Field Cannot Be Empty';
+                                          }
+                                          else if (value != viewModel.password.value) {
+                                            return 'Passwords don\'t match';
+                                          }
+                                          else {
+                                            return null;
+                                          }
+                                        },
+                                        obscureText: viewModel.passwd2Visibility.value,
+                                        decoration: kSignUpAndLogInScreenFieldDecoration.copyWith(
+                                          errorStyle: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          hintText: 'Confirm your password',
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 25),
+                                          suffixIcon: IconButton(
+                                              onPressed: () {
+                                                viewModel.password2VisibilityFunc();
+                                              },
+                                              icon: viewModel.password2FieldIcon.value
+                                          ),
+                                        ),
+                                      ),
                                     ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 13.0,
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 15.0),
-                                  child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Password',
-                                        style: TextStyle(
-                                            color: Color(0xff444443),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Poppins'
-                                        ),
-                                      ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                TextFormField(
-                                  onChanged: (value) {
-                                      viewModel.password.value = value;
-                                  },
-                                  validator: (value) {
-                                    if (value == null || value == '') {
-                                      return 'Field Cannot Be Empty';
-                                    }
-                                    else if (value.length < 8) {
-                                      return 'Password must be 8 characters long';
-                                    }
-                                    else {
-                                      return null;
-                                    }
-                                  },
-                                  obscureText: viewModel.passwd1Visibility.value,
-                                  decoration: kSignUpAndLogInScreenFieldDecoration.copyWith(
-                                    errorStyle: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 25),
-                                    hintText: 'Enter your password',
-                                    suffixIcon: IconButton(
-                                        onPressed: () {
-                                          viewModel.password1VisibilityFunc();
-                                        },
-                                        icon: viewModel.password1FieldIcon.value
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 13,
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 15.0),
-                                  child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Confirm Password',
-                                        style: TextStyle(
-                                            color: Color(0xff444443),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Poppins'
-                                        ),
-                                      ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value == null || value == '') {
-                                      return 'Field Cannot Be Empty';
-                                    }
-                                    else if (value != viewModel.password.value) {
-                                      return 'Passwords don\'t match';
-                                    }
-                                    else {
-                                      return null;
-                                    }
-                                  },
-                                  obscureText: viewModel.passwd2Visibility.value,
-                                  decoration: kSignUpAndLogInScreenFieldDecoration.copyWith(
-                                    errorStyle: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    hintText: 'Confirm your password',
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 25),
-                                    suffixIcon: IconButton(
-                                        onPressed: () {
-                                          viewModel.password2VisibilityFunc();
-                                        },
-                                        icon: viewModel.password2FieldIcon.value
-                                    ),
                                   ),
                                 ),
                                 const SizedBox(
@@ -290,13 +290,20 @@ class SignUpScreen extends StatelessWidget {
                                         final connCheck = await checkConnection();
                                         if (connCheck == true) {
                                           viewModel.overlay.value = true;
-                                          await viewModel.validateAndSubmit();
-                                          if (viewModel.proceed.value == true) {
+                                          if (viewModel.formKey.currentState!
+                                              .validate() == true) {
+                                            await viewModel.validateAndSubmit();
+                                            if (viewModel.proceed.value ==
+                                                true) {
+                                              viewModel.overlay.value = false;
+                                              Get.off(() => BaseLayout());
+                                            } else{
+                                              viewModel.overlay.value = false;
+                                            }
+                                          } else{
                                             viewModel.overlay.value = false;
-                                            Get.off(() => BaseLayout());
                                           }
-                                        }
-                                        else {
+                                        } else {
                                           viewModel.overlay.value = false;
                                           showToast('No Internet Connection');
                                         }

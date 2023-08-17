@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:image/image.dart' as im;
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
-import 'package:online_admission/screens/homepage/homepage_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
@@ -36,6 +36,7 @@ class ScreenOneViewModel extends GetxController{
   var currentDateTime = DateTime.now();
   Rx<Uint8List> csvBytes = Uint8List(0).obs;
   var currentYear;
+  im.Image barcodeImage = im.Image(width: 60, height: 50);
   RxBool campusFieldVisibility = false.obs;
   RxList<DropdownMenuItem> campusList = <DropdownMenuItem>[].obs;
   RxString userID = ''.obs;

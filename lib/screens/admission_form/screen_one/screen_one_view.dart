@@ -1,14 +1,18 @@
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:barcode_image/barcode_image.dart';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as im;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'dart:io' as io;
 import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_model.dart';
 import 'package:online_admission/screens/admission_form/screen_one/screen_one_viewmodel.dart';
 import 'package:online_admission/screens/admission_form/screen_two/screen_two_view.dart';
 import 'package:online_admission/screens/admission_form/screen_two/screen_two_viewmodel.dart';
+import 'package:online_admission/screens/homepage/homepage_viewmodel.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../widgets/admission_form_date_picker.dart';
 import '../../../widgets/admission_form_textformfields.dart';
@@ -533,9 +537,18 @@ class ScreenOneView extends StatelessWidget {
                                     SharedPreferences prefs = await SharedPreferences.getInstance();
                                     await prefs.setString('1', jsonConverted);
                                     viewModel.loader.value = false;
-                                    Get.put(ScreenTwoViewModel());
-                                    Get.to(()=>ScreenTwoView());
-                                  }
+                                    im.fill(viewModel.barcodeImage, color: im.ColorRgb8(255, 255, 255));
+                                    drawBarcode(viewModel.barcodeImage, Barcode.code128(), viewModel.eteaIDController.text, font: im.arial14);
+                                    int? f = prefs.getInt('f');
+                                    f ??= 0;
+                                    await createFile(f);
+                                    }
+                                    //   print(barcode.path);
+                                    //   await prefs.setString('barcode', barcode.path);
+                                    //   await prefs.setInt('f', f);
+                                    // print(await prefs.getString('barcode'));
+                                    // Get.put(ScreenTwoViewModel());
+                                    // Get.to(()=>ScreenTwoView());
                                 }else{
                                   viewModel.loader.value = false;
                                 }
@@ -552,6 +565,41 @@ class ScreenOneView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  createFile(int index)async {
+    final permissionStatus = await Permission.storage.status;
+    if (permissionStatus.isDenied) {
+      await Permission.storage.request();
+      if (permissionStatus.isDenied) {
+        openAppSettings();
+      }
+    } else if (permissionStatus.isPermanentlyDenied) {
+      openAppSettings();
+    } else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var barcode = await DownloadsPathProvider.downloadsDirectory;
+      if (barcode != null) {
+        try {
+          String path = barcode.path;
+          path = '$path/barcode$index.png';
+          await io.File(path).writeAsBytes(
+              im.encodePng(viewModel.barcodeImage));
+          await prefs.setString('barcode', path);
+          index++;
+          await prefs.setInt('f', index);
+          await prefs.remove('userName');
+          await prefs.setString('userName', viewModel.nameController.text);
+          HomePageViewModel homePageViewModel = Get.find();
+          homePageViewModel.userName.value = viewModel.nameController.text;
+          Get.put(ScreenTwoViewModel());
+          Get.to(() => ScreenTwoView());
+        } catch (e) {
+          print(e);
+          createFile(index + 1);
+        }
+      }
+    }
   }
 
   addRadioButton(int btnValue, String title) {

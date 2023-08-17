@@ -6,6 +6,7 @@ import 'package:online_admission/constants.dart';
 import 'package:online_admission/screens/admission_form/screen_four/screen_four_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screen_five/screen_five_view.dart';
+import '../screen_five/screen_five_viewmodel.dart';
 
 class ScreenFourView extends StatelessWidget {
 
@@ -162,6 +163,7 @@ class ScreenFourView extends StatelessWidget {
                               });
                               await prefs.setStringList('4', list);
                               viewModel.loader.value = false;
+                              Get.put(ScreenFiveViewModel());
                               Get.to(() => ScreenFiveView());
                             } else{
                               viewModel.loader.value = false;
