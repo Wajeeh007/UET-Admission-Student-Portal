@@ -173,7 +173,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(email: userEmail,),
+      home: BaseLayout(),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:barcode_image/barcode_image.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as im;
 import 'package:flutter/services.dart';
@@ -578,7 +577,8 @@ class ScreenOneView extends StatelessWidget {
       openAppSettings();
     } else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var barcode = await DownloadsPathProvider.downloadsDirectory;
+      var barcode ;
+      // = await DownloadsPathProvider.downloadsDirectory;
       if (barcode != null) {
         try {
           String path = barcode.path;
